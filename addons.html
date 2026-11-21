@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Add-ons · Café Centígrado</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link
+   href="https://fonts.googleapis.com/css2? family=Big+Shoulders+Display:wght@400;700;900&family=DM+Mono:wght@400&family=Hanken+Gr otesk:wght@400&display=swap"
+   rel="stylesheet">
+ <link rel="stylesheet" href="/AmenCode/styles.css">
+ <link rel="stylesheet" href="/AmenCode/page.css">
+</head>
+<body class="sub" data-page="addons">
+ <header class="header">
+   <div class="container header__inner">
+     <a class="logo" href="/AmenCode/index.html">
+       <img class="logo__mark" src="/AmenPhoto/logo-mark.png" alt="">
+       <span class="logo__text"><span class="logo__name">Café Centígrado</span><span class="logo__sub">Sta. Ana ·
+           Manila</span></span>
+     </a>
+     <nav class="nav" aria-label="Primary">
+       <div class="nav__links" id="navLinks">
+         <a class="nav__link" href="/AmenCode/index.html">Home</a><a class="nav__link"
+           href="/AmenCode/about.html">About</a><a class="nav__link" href="/AmenCode/menu.html">Menu</a><a
+           class="nav__link is-active" href="/AmenCode/addons.html">Add-ons</a>
+       </div>
+       <!-- ===== ACCOUNT BUTTON =====
+    Paste this block inside <nav class="nav">, just before the Order button, on every page.
+    The styles are in styles.css and the script is in page.js, so nothing else is needed. -->
+       <div class="account" id="account">
+         <button class="account__btn" id="accountBtn" type="button" aria-label="Account, not signed in"
+           aria-expanded="false" aria-controls="accountPanel">
+           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+             <circle cx="12" cy="8" r="4"></circle>
+             <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
+           </svg>
+         </button>
+         <div class="account__panel" id="accountPanel" hidden>
+           <div id="accountOut">
+             <p class="mono-sm">Account</p>
+             <p class="account__text">You're not signed in.</p>
+             <div class="account__actions">
+               <a class="btn btn--fill" href="/AmenCode/SignUp.html">Sign in</a>
+               <a class="btn btn--line" href="/AmenCode/SignUp.html#signup">Create account</a>
+             </div>
+           </div>
+           <div id="accountIn" hidden>
+             <p class="mono-sm">Signed in as</p>
+             <p class="account__name" id="accountName"></p>
+             <p class="mono-sm account__email" id="accountEmail"></p>
+             <div class="account__actions">
+               <a class="btn btn--fill" href="/AmenCode/SignUp.html">My account</a>
+               <button class="btn btn--line" type="button" id="accountOutBtn">Log out</button>
+             </div>
+           </div>
+         </div>
+       </div>
+       <button class="cart-btn" id="openCart" type="button">Order <span class="cart-btn__count"
+           id="cartCount">0</span></button>
+       <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false"
+         aria-controls="navLinks"><span></span><span></span><span></span></button>
+     </nav>
+   </div>
+ </header>
+ <main id="top">
+   <section class="page-hero">
+     <div class="container">
+       <p class="crumbs"><a href="/AmenCode/index.html">Home</a> / <b>Add-ons</b></p>
+       <p class="eyebrow">03 — Add-ons</p>
+       <h1>Make it<br><em>yours</em></h1>
+       <p class="lead">Extra shots, milk swaps, syrups and toppings. Add them to your order and tell our barista which
+         drink they go with.</p>
+     </div>
+   </section>
+   <!-- Which drink do the add-ons go with? (the + buttons below attach to the drink chosen here) -->
+   <section class="container target" aria-label="Choose a drink for your add-ons">
+     <div class="target__row">
+       <label class="mono-sm" for="addonTarget">Adding to</label>
+       <select id="addonTarget" aria-describedby="addonMsg" disabled>
+         <option value="">No drinks in your order yet</option>
+       </select>
+       <a class="btn btn--line" href="/AmenCode/menu.html">Pick a drink</a>
+     </div>
+     <p class="mono-sm" id="addonMsg" role="status">Choose which drink in your order these add-ons go with.</p>
+   </section>
+   <section class="container extras" id="extras" aria-label="Add-ons">
+     <article class="extra">
+       <div class="extra__head">
+         <h2>Espresso</h2><span>01</span>
+       </div>
+       <p class="extra__sub">Make it stronger</p>
+       <ul>
+         <li class="xrow">
+           <div>
+             <h3>Extra Shot</h3>
+             <p>One more pull of our house espresso</p>
+           </div>
+           <div class="xrow__r"><b>+₱40</b><button class="add" type="button" aria-label="Add Extra Shot to order"
+               data-name="Extra Shot" data-price="40" data-key="addon:Extra Shot">+</button></div>
+         </li>
+         <li class="xrow">
+           <div>
+             <h3>Decaf Swap</h3>
+             <p>Same drink, easier sleep</p>
+           </div>
+           <div class="xrow__r"><b>+₱30</b><button class="add" type="button" aria-label="Add Decaf Swap to order"
+               data-name="Decaf Swap" data-price="30" data-key="addon:Decaf Swap">+</button></div>
+         </li>
+       </ul>
+     </article>
+     <article class="extra">
+       <div class="extra__head">
+         <h2>Milk</h2><span>02</span>
+       </div>
+       <p class="extra__sub">Swap your base</p>
+       <ul>
+         <li class="xrow">
+           <div>
+             <h3>Oat Milk<span class="tag">Popular</span></h3>
+             <p>Creamy, plant-based</p>
+           </div>
+           <div class="xrow__r"><b>+₱45</b><button class="add" type="button" aria-label="Add Oat Milk to order"
+               data-name="Oat Milk" data-price="45" data-key="addon:Oat Milk">+</button></div>
+         </li>
+         <li class="xrow">
+           <div>
+             <h3>Almond Milk</h3>
+             <p>Light and nutty</p>
+           </div>
+           <div class="xrow__r"><b>+₱45</b><button class="add" type="button" aria-label="Add Almond Milk to order"
+               data-name="Almond Milk" data-price="45" data-key="addon:Almond Milk">+</button></div>
+         </li>
+       </ul>
+     </article>
+     <article class="extra">
+       <div class="extra__head">
+         <h2>Syrups</h2><span>03</span>
+       </div>
+       <p class="extra__sub">A little sweeter</p>
+       <ul>
+         <li class="xrow">
+           <div>
+             <h3>Vanilla Syrup</h3>
+             <p>Classic and smooth</p>
+           </div>
+           <div class="xrow__r"><b>+₱25</b><button class="add" type="button" aria-label="Add Vanilla Syrup to order"
+               data-name="Vanilla Syrup" data-price="25" data-key="addon:Vanilla Syrup">+</button></div>
+         </li>
+         <li class="xrow">
+           <div>
+             <h3>Caramel Syrup</h3>
+             <p>Buttery and rich</p>
+           </div>
+           <div class="xrow__r"><b>+₱25</b><button class="add" type="button" aria-label="Add Caramel Syrup to order"
+               data-name="Caramel Syrup" data-price="25" data-key="addon:Caramel Syrup">+</button></div>
+         </li>
+         <li class="xrow">
+           <div>
+             <h3>Hazelnut Syrup</h3>
+             <p>Toasty and warm</p>
+           </div>
+           <div class="xrow__r"><b>+₱25</b><button class="add" type="button" aria-label="Add Hazelnut Syrup to order"
+               data-name="Hazelnut Syrup" data-price="25" data-key="addon:Hazelnut Syrup">+</button></div>
+         </li>
+       </ul>
+     </article>
+     <article class="extra">
+       <div class="extra__head">
+         <h2>Toppings</h2><span>04</span>
+       </div>
+       <p class="extra__sub">Finish it off</p>
+       <ul>
+         <li class="xrow">
+           <div>
+             <h3>Whipped Cream</h3>
+             <p>Piled high on any iced drink</p>
+           </div>
+           <div class="xrow__r"><b>+₱20</b><button class="add" type="button" aria-label="Add Whipped Cream to order"
+               data-name="Whipped Cream" data-price="20" data-key="addon:Whipped Cream">+</button></div>
+         </li>
+         <li class="xrow">
+           <div>
+             <h3>Popping Boba<span class="tag">Fruity</span></h3>
+             <p>Strawberry pearls that burst</p>
+           </div>
+           <div class="xrow__r"><b>+₱30</b><button class="add" type="button" aria-label="Add Popping Boba to order"
+               data-name="Popping Boba" data-price="30" data-key="addon:Popping Boba">+</button></div>
+         </li>
+         <li class="xrow">
+           <div>
+             <h3>Choco Drizzle</h3>
+             <p>Dark chocolate sauce</p>
+           </div>
+           <div class="xrow__r"><b>+₱15</b><button class="add" type="button" aria-label="Add Choco Drizzle to order"
+               data-name="Choco Drizzle" data-price="15" data-key="addon:Choco Drizzle">+</button></div>
+         </li>
+       </ul>
+     </article>
+   </section>
+   <a class="next" href="/AmenCode/index.html">
+     <div class="container">
+       <div><small>Next — Home</small><b>Back to home</b></div><i>→</i>
+     </div>
+   </a>
+ </main>
+ <footer class="footer">
+   <div class="container footer__inner">
+     <div class="footer__top">
+       <div>
+         <h2 class="h2-lg h2-foot">Stay in the loop.</h2>
+         <p class="footer__text">New drinks, schedule changes, and promos. One email a month, no spam.</p>
+       </div>
+       <form class="subscribe" id="subscribe" novalidate>
+         <div class="subscribe__box"><input type="email" id="email"placeholder="you@email.com"
+             aria-label="Email address" required><button type="submit">Subscribe</button></div>
+         <p class="subscribe__msg" id="subMsg" role="status"></p>
+       </form>
+     </div>
+     <div class="footer__bottom">
+       <span>© 2026 Café Centígrado Manila · 2543 Tejeron Street, Sta. Ana, Manila 1009</span>
+       <nav class="footer__nav" aria-label="Footer"><a href="#">Instagram</a><a href="#">Facebook</a><a
+           href="#">Messenger</a><a href="#">Email</a><a href="#top">Back to top ↑</a></nav>
+     </div>
+   </div>
+ </footer>
+ <div class="scrim" id="scrim"></div>
+ <aside class="cart" id="cart" aria-label="Your order" aria-hidden="true">
+   <div class="cart__head">
+     <h2>Your order</h2><button type="button" id="closeCart">Close ✕</button>
+   </div>
+   <div class="cart__body" id="cartBody"></div>
+   <div class="cart__total" id="cartTotal" hidden><span>Total</span><span id="totalAmt">₱0</span></div>
+ </aside>
+ <script src="/AmenCode/page.js"></script>
+</body>
+</html>
