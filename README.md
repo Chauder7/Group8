@@ -1,3 +1,0 @@
-# Group8
-
-Hello
