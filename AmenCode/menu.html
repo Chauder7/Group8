@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Menu · Café Centígrado</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link
+   href="https://fonts.googleapis.com/css2? family=Big+Shoulders+Display:wght@400;700;900&family=DM+Mono:wght@400&family=Hanken+Gr otesk:wght@400&display=swap"
+   rel="stylesheet">
+ <link rel="stylesheet" href="/AmenCode/styles.css">
+ <link rel="stylesheet" href="/AmenCode/page.css">
+</head>
+<body class="sub" data-page="menu">
+ <header class="header">
+   <div class="container header__inner">
+     <a class="logo" href="/AmenCode/index.html">
+       <img class="logo__mark" src="/AmenPhoto/logo-mark.png" alt="">
+       <span class="logo__text"><span class="logo__name">Café Centígrado</span><span class="logo__sub">Sta. Ana ·
+           Manila</span></span>
+     </a>
+     <nav class="nav" aria-label="Primary">
+       <div class="nav__links" id="navLinks">
+         <a class="nav__link" href="/AmenCode/index.html">Home</a><a class="nav__link"
+           href="/AmenCode/about.html">About</a><a class="nav__link is-active" href="/AmenCode/menu.html">Menu</a><a
+           class="nav__link" href="/AmenCode/addons.html">Add-ons</a>
+       </div>
+       <!-- ===== ACCOUNT BUTTON =====
+    Paste this block inside <nav class="nav">, just before the Order button, on every page.
+    The styles are in styles.css and the script is in page.js, so nothing else is needed. -->
+       <div class="account" id="account">
+         <button class="account__btn" id="accountBtn" type="button" aria-label="Account, not signed in"
+           aria-expanded="false" aria-controls="accountPanel">
+           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+             <circle cx="12" cy="8" r="4"></circle>
+             <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
+           </svg>
+         </button>
+         <div class="account__panel" id="accountPanel" hidden>
+           <div id="accountOut">
+             <p class="mono-sm">Account</p>
+             <p class="account__text">You're not signed in.</p>
+             <div class="account__actions">
+               <a class="btn btn--fill" href="/AmenCode/SignUp.html">Sign in</a>
+               <a class="btn btn--line" href="/AmenCode/SignUp.html#signup">Create account</a>
+             </div>
+           </div>
+           <div id="accountIn" hidden>
+             <p class="mono-sm">Signed in as</p>
+             <p class="account__name" id="accountName"></p>
+             <p class="mono-sm account__email" id="accountEmail"></p>
+             <div class="account__actions">
+               <a class="btn btn--fill" href="/AmenCode/SignUp.html">My account</a>
+               <button class="btn btn--line" type="button" id="accountOutBtn">Log out</button>
+             </div>
+           </div>
+         </div>
+       </div>
+       <button class="cart-btn" id="openCart" type="button">Order <span class="cart-btn__count"
+           id="cartCount">0</span></button>
+       <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false"
+         aria-controls="navLinks"><span></span><span></span><span></span></button>
+     </nav>
+   </div>
+ </header>
+ <main id="top">
+   <section class="page-hero">
+     <div class="container">
+       <p class="crumbs"><a href="/AmenCode/index.html">Home</a> / <b>Menu</b></p>
+       <p class="eyebrow">02 — Menu</p>
+       <h1>Hot, iced<br><em>&amp; everything</em> nice</h1>
+       <p class="lead">Coffee, non-coffee, frappés and late-night bites. Add anything to your order for in-store or
+         curbside pickup.</p>
+     </div>
+   </section>
+   <section class="container menu">
+     <div class="menu__side">
+       <p class="eyebrow">01 — Menu</p>
+       <h2>What's on the bar</h2>
+       <p class="intro">Order ahead and pick a time — we'll have it ready at the counter. Pay when you pick up.</p>
+       <div class="tabs" id="tabs" role="tablist" aria-label="Menu categories">
+         <button class="tab is-on" type="button" role="tab" data-tab="hot-coffee">Hot Coffee</button>
+         <button class="tab" type="button" role="tab" data-tab="ice-blended">Ice Blended</button>
+         <button class="tab" type="button" role="tab" data-tab="non-coffee">Non-Coffee</button>
+         <button class="tab" type="button" role="tab" data-tab="yakult">Yakult</button>
+         <button class="tab" type="button" role="tab" data-tab="tea">Tea</button>
+         <button class="tab" type="button" role="tab" data-tab="snacks">Snacks</button>
+         <button class="tab" type="button" role="tab" data-tab="cakes-pastry">Cakes &amp; Pastry</button>
+         <button class="tab" type="button" role="tab" data-tab="rice-bowls">Rice Bowls</button>
+         <button class="tab" type="button" role="tab" data-tab="pasta">Pasta</button>
+       </div>
+     </div>
+     <div class="menu__panels">
+       <ul class="menu__list" id="hot-coffee" role="tabpanel" aria-label="Hot Coffee">
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Caramel Macchiato</h3>
+             <p>Vanilla milk, espresso, caramel drizzle</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Caramel Macchiato (M) to order"
+                 data-name="Caramel Macchiato (M)" data-price="130" data-key="hot-coffee:0:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Caramel Macchiato (L) to order"
+                 data-name="Caramel Macchiato (L)" data-price="140" data-key="hot-coffee:0:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Cafe con Leche</h3>
+             <p>Espresso and steamed milk, Spanish-style</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱125</b>
+               <button class="add" type="button" aria-label="Add Cafe con Leche (M) to order"
+                 data-name="Cafe con Leche (M)" data-price="125" data-key="hot-coffee:1:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱135</b>
+               <button class="add" type="button" aria-label="Add Cafe con Leche (L) to order"
+                 data-name="Cafe con Leche (L)" data-price="135" data-key="hot-coffee:1:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Vanilla Latte</h3>
+             <p>Espresso, milk and vanilla</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱120</b>
+               <button class="add" type="button" aria-label="Add Vanilla Latte (M) to order"
+                 data-name="Vanilla Latte (M)" data-price="120" data-key="hot-coffee:2:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Vanilla Latte (L) to order"
+                 data-name="Vanilla Latte (L)" data-price="130" data-key="hot-coffee:2:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">04</span>
+           <div>
+             <h3>Mocha</h3>
+             <p>Espresso, chocolate and milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Mocha (M) to order"data-name="Mocha (M)"
+                 data-price="130" data-key="hot-coffee:3:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Mocha (L) to order"data-name="Mocha (L)"
+                 data-price="140" data-key="hot-coffee:3:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">05</span>
+           <div>
+             <h3>Cafe Latte</h3>
+             <p>Espresso with steamed fresh milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱105</b>
+               <button class="add" type="button" aria-label="Add Cafe Latte (M) to order" data-name="Cafe Latte (M)"
+                 data-price="105" data-key="hot-coffee:4:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱115</b>
+               <button class="add" type="button" aria-label="Add Cafe Latte (L) to order" data-name="Cafe Latte (L)"
+                 data-price="115" data-key="hot-coffee:4:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">06</span>
+           <div>
+             <h3>White Mocha</h3>
+             <p>Espresso, white chocolate and milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add White Mocha (M) to order" data-name="White Mocha (M)"
+                 data-price="130" data-key="hot-coffee:5:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add White Mocha (L) to order" data-name="White Mocha (L)"
+                 data-price="140" data-key="hot-coffee:5:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">07</span>
+           <div>
+             <h3>Toffee Hazelnut</h3>
+             <p>Espresso, toffee and hazelnut</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Toffee Hazelnut (M) to order"
+                 data-name="Toffee Hazelnut (M)" data-price="130" data-key="hot-coffee:6:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Toffee Hazelnut (L) to order"
+                 data-name="Toffee Hazelnut (L)" data-price="140" data-key="hot-coffee:6:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">08</span>
+           <div>
+             <h3>Oat Milk Latte</h3>
+             <p>Espresso with creamy oat milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱115</b>
+               <button class="add" type="button" aria-label="Add Oat Milk Latte (M) to order"
+                 data-name="Oat Milk Latte (M)" data-price="115" data-key="hot-coffee:7:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Oat Milk Latte (L) to order"
+                 data-name="Oat Milk Latte (L)" data-price="130" data-key="hot-coffee:7:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">09</span>
+           <div>
+             <h3>Sea Salt Caramel<span class="tag">Favorite</span></h3>
+             <p>Caramel latte with a sea-salt finish</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Sea Salt Caramel (M) to order"
+                 data-name="Sea Salt Caramel (M)" data-price="130" data-key="hot-coffee:8:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Sea Salt Caramel (L) to order"
+                 data-name="Sea Salt Caramel (L)" data-price="140" data-key="hot-coffee:8:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">10</span>
+           <div>
+             <h3>Americano</h3>
+             <p>Espresso over hot water</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱95</b>
+               <button class="add" type="button" aria-label="Add Americano (M) to order" data-name="Americano (M)"
+                 data-price="95" data-key="hot-coffee:9:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱110</b>
+               <button class="add" type="button" aria-label="Add Americano (L) to order" data-name="Americano (L)"
+                 data-price="110" data-key="hot-coffee:9:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">11</span>
+           <div>
+             <h3>Matcha Oat Latte</h3>
+             <p>Matcha with oat milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱135</b>
+               <button class="add" type="button" aria-label="Add Matcha Oat Latte (M) to order"
+                 data-name="Matcha Oat Latte (M)" data-price="135" data-key="hot-coffee:10:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Matcha Oat Latte (L) to order"
+                 data-name="Matcha Oat Latte (L)" data-price="145" data-key="hot-coffee:10:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">12</span>
+           <div>
+             <h3>Matcha Latte</h3>
+             <p>Matcha with fresh milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Matcha Latte (M) to order"
+                 data-name="Matcha Latte (M)" data-price="130" data-key="hot-coffee:11:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Matcha Latte (L) to order"
+                 data-name="Matcha Latte (L)" data-price="140" data-key="hot-coffee:11:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">13</span>
+           <div>
+             <h3>Chocolate Milk</h3>
+             <p>Rich chocolate and milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱125</b>
+               <button class="add" type="button" aria-label="Add Chocolate Milk (M) to order"
+                 data-name="Chocolate Milk (M)" data-price="125" data-key="hot-coffee:12:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱135</b>
+               <button class="add" type="button" aria-label="Add Chocolate Milk (L) to order"
+                 data-name="Chocolate Milk (L)" data-price="135" data-key="hot-coffee:12:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">14</span>
+           <div>
+             <h3>Affogato</h3>
+             <p>Espresso poured over ice cream</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱115</b>
+               <button class="add" type="button" aria-label="Add Affogato (M) to order" data-name="Affogato (M)"
+                 data-price="115" data-key="hot-coffee:13:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱125</b>
+               <button class="add" type="button" aria-label="Add Affogato (L) to order" data-name="Affogato (L)"
+                 data-price="125" data-key="hot-coffee:13:Large">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="ice-blended" role="tabpanel" aria-label="Ice Blended" hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Choco Chip Cream<span class="tag">Favorite</span></h3>
+             <p>Blended chocolate, choco chips, whipped cream</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱180</b>
+               <button class="add" type="button" aria-label="Add Choco Chip Cream (M) to order"
+                 data-name="Choco Chip Cream (M)" data-price="180" data-key="ice-blended:0:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱200</b>
+               <button class="add" type="button" aria-label="Add Choco Chip Cream (L) to order"
+                 data-name="Choco Chip Cream (L)" data-price="200" data-key="ice-blended:0:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Oreo Cream</h3>
+             <p>Cookies-and-cream, blended</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱175</b>
+               <button class="add" type="button" aria-label="Add Oreo Cream (M) to order" data-name="Oreo Cream (M)"
+                 data-price="175" data-key="ice-blended:1:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱195</b>
+               <button class="add" type="button" aria-label="Add Oreo Cream (L) to order" data-name="Oreo Cream (L)"
+                 data-price="195" data-key="ice-blended:1:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Mint Choco Chip</h3>
+             <p>Cool mint with chocolate chips</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱185</b>
+               <button class="add" type="button" aria-label="Add Mint Choco Chip (M) to order"
+                 data-name="Mint Choco Chip (M)" data-price="185" data-key="ice-blended:2:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱195</b>
+               <button class="add" type="button" aria-label="Add Mint Choco Chip (L) to order"
+                 data-name="Mint Choco Chip (L)" data-price="195" data-key="ice-blended:2:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">04</span>
+           <div>
+             <h3>Matcha Cream</h3>
+             <p>Blended matcha with whipped cream</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱185</b>
+               <button class="add" type="button" aria-label="Add Matcha Cream (M) to order"
+                 data-name="Matcha Cream (M)" data-price="185" data-key="ice-blended:3:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱200</b>
+               <button class="add" type="button" aria-label="Add Matcha Cream (L) to order"
+                 data-name="Matcha Cream (L)" data-price="200" data-key="ice-blended:3:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">05</span>
+           <div>
+             <h3>Caramel Coffee</h3>
+             <p>Blended coffee with caramel</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱185</b>
+               <button class="add" type="button" aria-label="Add Caramel Coffee (M) to order"
+                 data-name="Caramel Coffee (M)" data-price="185" data-key="ice-blended:4:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱200</b>
+               <button class="add" type="button" aria-label="Add Caramel Coffee (L) to order"
+                 data-name="Caramel Coffee (L)" data-price="200" data-key="ice-blended:4:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">06</span>
+           <div>
+             <h3>Strawberry Cream</h3>
+             <p>Strawberry, milk and whipped cream</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱175</b>
+               <button class="add" type="button" aria-label="Add Strawberry Cream (M) to order"
+                 data-name="Strawberry Cream (M)" data-price="175" data-key="ice-blended:5:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱195</b>
+               <button class="add" type="button" aria-label="Add Strawberry Cream (L) to order"
+                 data-name="Strawberry Cream (L)" data-price="195" data-key="ice-blended:5:Large">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="non-coffee" role="tabpanel" aria-label="Non-Coffee"hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Chocolate Milk</h3>
+             <p>Iced chocolate and milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Chocolate Milk (M) to order"
+                 data-name="Chocolate Milk (M)" data-price="145" data-key="non-coffee:0:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱160</b>
+               <button class="add" type="button" aria-label="Add Chocolate Milk (L) to order"
+                 data-name="Chocolate Milk (L)" data-price="160" data-key="non-coffee:0:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Strawberry Milk</h3>
+             <p>Strawberry purée and fresh milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱150</b>
+               <button class="add" type="button" aria-label="Add Strawberry Milk (M) to order"
+                 data-name="Strawberry Milk (M)" data-price="150" data-key="non-coffee:1:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱175</b>
+               <button class="add" type="button" aria-label="Add Strawberry Milk (L) to order"
+                 data-name="Strawberry Milk (L)" data-price="175" data-key="non-coffee:1:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Matcha Latte</h3>
+             <p>Iced matcha over milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱165</b>
+               <button class="add" type="button" aria-label="Add Matcha Latte (M) to order"
+                 data-name="Matcha Latte (M)" data-price="165" data-key="non-coffee:2:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱180</b>
+               <button class="add" type="button" aria-label="Add Matcha Latte (L) to order"
+                 data-name="Matcha Latte (L)" data-price="180" data-key="non-coffee:2:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">04</span>
+           <div>
+             <h3>Strawberry Matcha<span class="tag">Favorite</span></h3>
+             <p>Matcha over strawberry milk</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱165</b>
+               <button class="add" type="button" aria-label="Add Strawberry Matcha (M) to order"
+                 data-name="Strawberry Matcha (M)" data-price="165" data-key="non-coffee:3:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱185</b>
+               <button class="add" type="button" aria-label="Add Strawberry Matcha (L) to order"
+                 data-name="Strawberry Matcha (L)" data-price="185" data-key="non-coffee:3:Large">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="yakult" role="tabpanel" aria-label="Yakult" hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Lemon Yakult</h3>
+             <p>Yakult shaken with lemon</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Lemon Yakult (L) to order"
+                 data-name="Lemon Yakult (L)" data-price="140" data-key="yakult:0:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Green Apple Yakult</h3>
+             <p>Yakult shaken with green apple</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Green Apple Yakult (L) to order"
+                 data-name="Green Apple Yakult (L)" data-price="140" data-key="yakult:1:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Passionfruit Yakult</h3>
+             <p>Yakult shaken with passionfruit</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Passionfruit Yakult (L) to order"
+                 data-name="Passionfruit Yakult (L)" data-price="140" data-key="yakult:2:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">04</span>
+           <div>
+             <h3>Kiwi Yakult</h3>
+             <p>Yakult shaken with kiwi</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Large</small><b>₱140</b>
+               <button class="add" type="button" aria-label="Add Kiwi Yakult (L) to order" data-name="Kiwi Yakult (L)"
+                 data-price="140" data-key="yakult:3:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">05</span>
+           <div>
+             <h3>Kiwi-Passionfruit Yakult</h3>
+             <p>Kiwi and passionfruit with Yakult</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Kiwi-Passionfruit Yakult (L) to order"
+                 data-name="Kiwi-Passionfruit Yakult (L)" data-price="145" data-key="yakult:4:Large">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="tea" role="tabpanel" aria-label="Tea" hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Lemon Tea</h3>
+             <p>Iced tea with lemon</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Lemon Tea (M) to order" data-name="Lemon Tea (M)"
+                 data-price="130" data-key="tea:0:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Lemon Tea (L) to order" data-name="Lemon Tea (L)"
+                 data-price="145" data-key="tea:0:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Green Apple Tea</h3>
+             <p>Iced tea with green apple</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Green Apple Tea (M) to order"
+                 data-name="Green Apple Tea (M)" data-price="130" data-key="tea:1:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Green Apple Tea (L) to order"
+                 data-name="Green Apple Tea (L)" data-price="145" data-key="tea:1:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Passionfruit Tea</h3>
+             <p>Iced tea with passionfruit</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Passionfruit Tea (M) to order"
+                 data-name="Passionfruit Tea (M)" data-price="130" data-key="tea:2:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Passionfruit Tea (L) to order"
+                 data-name="Passionfruit Tea (L)" data-price="145" data-key="tea:2:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">04</span>
+           <div>
+             <h3>Kiwi Tea</h3>
+             <p>Iced tea with kiwi</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Kiwi Tea (M) to order" data-name="Kiwi Tea (M)"
+                 data-price="130" data-key="tea:3:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Kiwi Tea (L) to order" data-name="Kiwi Tea (L)"
+                 data-price="145" data-key="tea:3:Large">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">05</span>
+           <div>
+             <h3>Kiwi-Passionfruit Tea</h3>
+             <p>Iced tea with kiwi and passionfruit</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><small>Medium</small><b>₱135</b>
+               <button class="add" type="button" aria-label="Add Kiwi-Passionfruit Tea (M) to order"
+                 data-name="Kiwi-Passionfruit Tea (M)" data-price="135" data-key="tea:4:Medium">+</button>
+             </div>
+             <div class="size"><small>Large</small><b>₱145</b>
+               <button class="add" type="button" aria-label="Add Kiwi-Passionfruit Tea (L) to order"
+                 data-name="Kiwi-Passionfruit Tea (L)" data-price="145" data-key="tea:4:Large">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="snacks" role="tabpanel" aria-label="Snacks" hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Nachos</h3>
+             <p>Loaded with meat, cheese and veggies</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱195</b>
+               <button class="add" type="button" aria-label="Add Nachos to order"data-name="Nachos" data-price="195"
+                 data-key="snacks:0:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Hungarian Sandwich</h3>
+             <p>Hungarian sausage in a soft bun</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱125</b>
+               <button class="add" type="button" aria-label="Add Hungarian Sandwich to order"
+                 data-name="Hungarian Sandwich" data-price="125" data-key="snacks:1:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Cheesy Meat Fries<span class="tag">Late-night</span></h3>
+             <p>Fries with cheese sauce and ground meat</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱195</b>
+               <button class="add" type="button" aria-label="Add Cheesy Meat Fries to order"
+                 data-name="Cheesy Meat Fries" data-price="195" data-key="snacks:2:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">04</span>
+           <div>
+             <h3>Mozzarella Sticks</h3>
+             <p>Served with marinara dip</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱170</b>
+               <button class="add" type="button" aria-label="Add Mozzarella Sticks to order"
+                 data-name="Mozzarella Sticks" data-price="170" data-key="snacks:3:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">05</span>
+           <div>
+             <h3>Flavored Fries</h3>
+             <p>Cheese, BBQ or Sour Cream — tell us in your note</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱155</b>
+               <button class="add" type="button" aria-label="Add Flavored Fries to order" data-name="Flavored Fries"
+                 data-price="155" data-key="snacks:4:">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="cakes-pastry" role="tabpanel" aria-label="Cakes &amp; Pastry" hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Biscoff Cheesecake</h3>
+             <p>Creamy cheesecake, Biscoff crust</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Biscoff Cheesecake to order"
+                 data-name="Biscoff Cheesecake" data-price="130" data-key="cakes-pastry:0:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Blueberry Cheesecake</h3>
+             <p>Topped with blueberry compote</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱120</b>
+               <button class="add" type="button" aria-label="Add Blueberry Cheesecake to order"
+                 data-name="Blueberry Cheesecake" data-price="120" data-key="cakes-pastry:1:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Cookies</h3>
+             <p>Choco chip, Walnut, Almond, Double Chocolate</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱65</b>
+               <button class="add" type="button" aria-label="Add Cookies to order"data-name="Cookies" data-price="65"
+                 data-key="cakes-pastry:2:">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="rice-bowls" role="tabpanel" aria-label="Rice Bowls"hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Pork Tonkatsu</h3>
+             <p>Breaded pork cutlet, rice and veggies</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱180</b>
+               <button class="add" type="button" aria-label="Add Pork Tonkatsu to order" data-name="Pork Tonkatsu"
+                 data-price="180" data-key="rice-bowls:0:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Hungarian Rice</h3>
+             <p>Hungarian sausage, rice and veggies</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱130</b>
+               <button class="add" type="button" aria-label="Add Hungarian Rice to order" data-name="Hungarian Rice"
+                 data-price="130" data-key="rice-bowls:1:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Chicken Poppers</h3>
+             <p>Crispy chicken bites, rice and dip</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱175</b>
+               <button class="add" type="button" aria-label="Add Chicken Poppers to order" data-name="Chicken Poppers"
+                 data-price="175" data-key="rice-bowls:2:">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+       <ul class="menu__list" id="pasta" role="tabpanel" aria-label="Pasta" hidden>
+         <li class="mrow">
+           <span class="mrow__no">01</span>
+           <div>
+             <h3>Tuna Pesto</h3>
+             <p>Penne in basil pesto with tuna</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱165</b>
+               <button class="add" type="button" aria-label="Add Tuna Pesto to order"data-name="Tuna Pesto"
+                 data-price="165" data-key="pasta:0:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">02</span>
+           <div>
+             <h3>Carbonara</h3>
+             <p>Creamy sauce, served with garlic toast</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱180</b>
+               <button class="add" type="button" aria-label="Add Carbonara to order"data-name="Carbonara"
+                 data-price="180" data-key="pasta:1:">+</button>
+             </div>
+           </div>
+         </li>
+         <li class="mrow">
+           <span class="mrow__no">03</span>
+           <div>
+             <h3>Truffle Pasta<span class="tag">Favorite</span></h3>
+             <p>Truffle cream, served with garlic toast</p>
+           </div>
+           <div class="mrow__sizes">
+             <div class="size"><b>₱195</b>
+               <button class="add" type="button" aria-label="Add Truffle Pasta to order" data-name="Truffle Pasta"
+                 data-price="195" data-key="pasta:2:">+</button>
+             </div>
+           </div>
+         </li>
+       </ul>
+     </div>
+   </section>
+   <section class="pick" id="pick">
+     <div class="container pick__inner">
+       <div class="pick__head">
+         <div>
+           <p class="eyebrow">Fan favorites</p>
+           <h2 class="h2-xl">Pick your drink</h2>
+         </div>
+         <p class="pick__intro">Tap a cup to see what's inside. Life's better when you pick your favorite. Which one
+           are you choosing today?</p>
+       </div>
+       <div class="pick__stage">
+         <!-- Replace: PHOTO/best.jpg -->
+         <img src="/AmenPhoto/best.jpg"
+           alt="Iced mocha, mocha frappé, mango popping boba and matcha frappé in Café Centígrado cups">
+         <div class="pick__cups" id="cups" role="radiogroup" aria-label="Choose a drink">
+           <button class="cup is-on" type="button" role="radio" aria-checked="true"aria-label="Choco Chip Cream"
+             data-key="ice-blended:0:Large" data-name="Choco Chip Cream"
+             data-desc="Blended chocolate, choco chips, whipped cream" data-price="200" data-color="#6b4a35"><span
+               class="cup__num">✓</span></button>
+           <button class="cup" type="button" role="radio" aria-checked="false" aria-label="Caramel Coffee"
+             data-key="ice-blended:4:Large" data-name="Caramel Coffee" data-desc="Blended coffee with caramel"
+             data-price="200" data-color="#a8794f"><span class="cup__num">2</span></button>
+           <button class="cup" type="button" role="radio" aria-checked="false" aria-label="Passionfruit Yakult"
+             data-key="yakult:2:Large" data-name="Passionfruit Yakult" data-desc="Yakult shaken with passionfruit"
+             data-price="140" data-color="#e8a33a"><span class="cup__num">3</span></button>
+           <button class="cup" type="button" role="radio" aria-checked="false" aria-label="Green Apple Yakult"
+             data-key="yakult:1:Large" data-name="Green Apple Yakult" data-desc="Yakult shaken with green apple"
+             data-price="140" data-color="#9db35a"><span class="cup__num">4</span></button>
+         </div>
+       </div>
+       <div class="pick__info">
+         <span class="pick__swatch" id="pSwatch" style="background:#6b4a35"></span>
+         <div>
+           <p class="mono-sm" id="pNo">No. 1 of 4 · Favorite</p>
+           <h3 class="pick__name" id="pName">Choco Chip Cream</h3>
+           <p class="pick__desc" id="pDesc">Blended chocolate, choco chips, whipped cream</p>
+         </div>
+         <div class="pick__buy"><span class="price" id="pPrice">₱200</span><button class="btn btn--fill" id="pAdd"
+             type="button">Add to order</button></div>
+       </div>
+     </div>
+   </section>
+   <a class="next" href="/AmenCode/addons.html">
+     <div class="container">
+       <div><small>Next — Add-ons</small><b>Make it yours</b></div><i>→</i>
+     </div>
+   </a>
+ </main>
+ <footer class="footer">
+   <div class="container footer__inner">
+     <div class="footer__top">
+       <div>
+         <h2 class="h2-lg h2-foot">Stay in the loop.</h2>
+         <p class="footer__text">New drinks, schedule changes, and promos. One email a month, no spam.</p>
+       </div>
+       <form class="subscribe" id="subscribe" novalidate>
+         <div class="subscribe__box"><input type="email" id="email"placeholder="you@email.com"
+             aria-label="Email address" required><button type="submit">Subscribe</button></div>
+         <p class="subscribe__msg" id="subMsg" role="status"></p>
+       </form>
+     </div>
+     <div class="footer__bottom">
+       <span>© 2026 Café Centígrado Manila · 2543 Tejeron Street, Sta. Ana, Manila 1009</span>
+       <nav class="footer__nav" aria-label="Footer"><a href="#">Instagram</a><a href="#">Facebook</a><a
+           href="#">Messenger</a><a href="#">Email</a><a href="#top">Back to top ↑</a></nav>
+     </div>
+   </div>
+ </footer>
+ <div class="scrim" id="scrim"></div>
+ <aside class="cart" id="cart" aria-label="Your order" aria-hidden="true">
+   <div class="cart__head">
+     <h2>Your order</h2><button type="button" id="closeCart">Close ✕</button>
+   </div>
+   <div class="cart__body" id="cartBody"></div>
+   <div class="cart__total" id="cartTotal" hidden><span>Total</span><span id="totalAmt">₱0</span></div>
+ </aside>
+ <script src="/AmenCode/page.js"></script>s
+</body>
+</html>
