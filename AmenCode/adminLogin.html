@@ -1,111 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Admin Login</title>
-   <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link
-   href="https://fonts.googleapis.com/css2? family=Big+Shoulders+Display:wght@400;700;900&family=DM+Mono:wght@400&family=Hanken+Gr otesk:wght@400&display=swap"
-   rel="stylesheet">
- <link rel="stylesheet" href="/AmenCode/styles.css">
-   <link rel="stylesheet" href="/AmenCode/page.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=DM+Mono:wght@400&family=Hanken+Grotesk:wght@400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/Group8/AmenCode/styles.css">
+    <link rel="stylesheet" href="/Group8/AmenCode/page.css">
 </head>
+
 <body class="budi">
-     <!-- Header -->
-   <header class="header">
-       <div class="container header__inner">
-           <a class="logo" href="/AmenCode/index.html">
-               <img class="logo__mark" src="/AmenPhoto/logo-mark.png" alt="">
-               <span class="logo__text"><span class="logo__name">Café Centígrado</span><span class="logo__sub">Sta. Ana
-                       ·
-                       Manila</span></span>
-           </a>
-           <nav class="nav" aria-label="Primary">
-               <div class="nav__links" id="navLinks">
-                   <a class="nav__link" href="/AmenCode/index.html">Home</a><a class="nav__link"
-                       href="/AmenCode/about.html">About</a><a class="nav__link"href="/AmenCode/menu.html">Menu</a><a
-                       class="nav__link" href="/AmenCode/addons.html">Add-ons</a>
-               </div>
-               <!-- ===== ACCOUNT BUTTON ===== -->
-               <div class="account" id="account">
-                   <button class="account__btn" id="accountBtn" type="button" aria-label="Account, not signed in"
-                       aria-expanded="false" aria-controls="accountPanel">
-                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                           <circle cx="12" cy="8" r="4"></circle>
-                           <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
-                       </svg>
-                   </button>
-                   <div class="account__panel" id="accountPanel" hidden>
-                       <div id="accountOut">
-                           <p class="mono-sm">Account</p>
-                           <p class="account__text">You're not signed in.</p>
-                           <div class="account__actions">
-                               <a class="btn btn--fill" href="/AmenCode/SignUp.html">Sign in</a>
-                               <a class="btn btn--line" href="/AmenCode/SignUp.html#signup">Create account</a>
-                           </div>
-                       </div>
-                       <div id="accountIn" hidden>
-                           <p class="mono-sm">Signed in as</p>
-                           <p class="account__name" id="accountName"></p>
-                           <p class="mono-sm account__email" id="accountEmail"></p>
-                           <div class="account__actions">
-                               <a class="btn btn--fill" href="/AmenCode/SignUp.html">My account</a>
-                               <button class="btn btn--line" type="button"id="accountOutBtn">Log out</button>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </nav>
-       </div>
-   </header>
-   <!-- Main -->
-<div class="login">
-   <img class="login__photo" src="/AmenPhoto/counter.png" alt="picture">
- <p class="crumbs"><a href="index.html">Home</a> / Admin</p>
- <p class="eyebrow" style="margin-top:40px">05 — Admin Login</p>
- <h2 class="oop"><span class="rust">admin</span> login</h2>
- <form id="form">
-   <label class="six" for="email">Email address</label>
-   <input id="email" type="email" placeholder="admin@email.com" autocomplete="off">
-   <label class="six" for="password">Password</label>
-   <div class="field">
-     <input id="password" type="password" autocomplete="new-password">
-     <button class="six show" id="shw" type="button">Show</button>
-   </div>
-   <p id="error" class="six"></p>
-   <button class="boton" type="submit">Sign in</button>
- </form>
-</div>
-<script src="/AmenCode/page.js"></script>
-<script>
-     document.getElementById("shw").onclick = function () {
-   var box = document.getElementById("password");
-   var hidden = box.type === "password";
-   box.type = hidden ? "text" : "password";
-   this.textContent = hidden ? "Hide" : "Show";
- };
- document.getElementById("form").onsubmit = function (e) {
-   e.preventDefault();
-   var email = document.getElementById("email").value;
-   var password = document.getElementById("password").value;
-   if (email === "adminside@email.com" && password === "admin1234567890") {
-     window.location.href = "/AmenCode/inentory.html"; // change to your dashboard page
-   } else {
-     document.getElementById("error").textContent = "Wrong email or password.";
-   }
- };
-</script>
-<!-- Footer -->
-   <footer class="footer">
-       <div class="container footer__inner">
-           <div class="footer__bottom">
-               <span>© 2026 Café Centígrado Manila · 2543 Tejeron Street, Sta. Ana, Manila 1009</span>
-               <nav class="footer__nav" aria-label="Footer">   <a href="#">Instagram</a><a href="#">Facebook</a><a
-                       href="#">Messenger</a><a href="#">Email</a><a href="/AmenCode/SignUp.html">Back to Sign In?</a></nav>
-           </div>
-       </div>
-   </footer>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header__inner">
+            <a class="logo" href="/Group8/AmenCode/index.html">
+                <img class="logo__mark" src="/Group8/AmenPhoto/logo-mark.png" alt="">
+                <span class="logo__text"><span class="logo__name">Café Centígrado</span><span class="logo__sub">Sta. Ana
+                        ·
+                        Manila</span></span>
+            </a>
+            <nav class="nav" aria-label="Primary">
+                <div class="nav__links" id="navLinks">
+                    <a class="nav__link" href="/Group8/AmenCode/index.html">Home</a><a class="nav__link"
+                        href="/Group8/AmenCode/about.html">About</a><a class="nav__link"
+                        href="/Group8/AmenCode/menu.html">Menu</a><a class="nav__link"
+                        href="/Group8/AmenCode/addons.html">Add-ons</a>
+                </div>
+                <!-- ===== ACCOUNT BUTTON ===== -->
+                <div class="account" id="account">
+                    <button class="account__btn" id="accountBtn" type="button" aria-label="Account, not signed in"
+                        aria-expanded="false" aria-controls="accountPanel">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
+                        </svg>
+                    </button>
+                    <div class="account__panel" id="accountPanel" hidden>
+                        <div id="accountOut">
+                            <p class="mono-sm">Account</p>
+                            <p class="account__text">You're not signed in.</p>
+                            <div class="account__actions">
+                                <a class="btn btn--fill" href="/Group8/AmenCode/SignUp.html">Sign in</a>
+                                <a class="btn btn--line" href="/Group8/AmenCode/SignUp.html#signup">Create account</a>
+                            </div>
+                        </div>
+                        <div id="accountIn" hidden>
+                            <p class="mono-sm">Signed in as</p>
+                            <p class="account__name" id="accountName"></p>
+                            <p class="mono-sm account__email" id="accountEmail"></p>
+                            <div class="account__actions">
+                                <a class="btn btn--fill" href="/Group8/AmenCode/SignUp.html">My account</a>
+                                <button class="btn btn--line" type="button" id="accountOutBtn">Log out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-expanded="false"
+                    aria-controls="navLinks"><span></span><span></span><span></span></button>
+            </nav>
+        </div>
+    </header>
+    <!-- Main -->
+    <div class="login">
+        <img class="login__photo" src="/Group8/AmenPhoto/counter.png" alt="picture">
+        <p class="crumbs"><a href="/Group8/AmenCode/index.html">Home</a> / Admin</p>
+        <p class="eyebrow" style="margin-top:40px">05 — Admin Login</p>
+        <h2 class="oop"><span class="rust">admin</span> login</h2>
+        <form id="form">
+            <label class="six" for="email">Email address</label>
+            <input id="email" type="email" placeholder="admin@email.com" autocomplete="off">
+            <label class="six" for="password">Password</label>
+            <div class="field">
+                <input id="password" type="password" autocomplete="new-password">
+                <button class="six show" id="shw" type="button">Show</button>
+            </div>
+            <p id="error" class="six"></p>
+            <button class="boton" type="submit">Sign in</button>
+        </form>
+    </div>
+    <script src="/Group8/AmenCode/page.js"></script>
+    <script>
+        document.getElementById("shw").onclick = function () {
+            var box = document.getElementById("password");
+            var hidden = box.type === "password";
+            box.type = hidden ? "text" : "password";
+            this.textContent = hidden ? "Hide" : "Show";
+        };
+        document.getElementById("form").onsubmit = function (e) {
+            e.preventDefault();
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            if (email === "adminside@email.com" && password === "admin1234567890") {
+                window.location.href = "/Group8/AmenCode/inventory.html"; // change to your dashboard page
+            } else {
+                document.getElementById("error").textContent = "Wrong email or password.";
+            }
+        };
+    </script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__bottom">
+                <span>© 2026 Café Centígrado Manila · 2543 Tejeron Street, Sta. Ana, Manila 1009</span>
+                <nav class="footer__nav" aria-label="Footer"> <a href="#">Instagram</a><a href="#">Facebook</a><a
+                        href="#">Messenger</a><a href="#">Email</a><a href="/Group8/AmenCode/SignUp.html">Back to Sign
+                        In?</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
 </body>
+
 </html>
