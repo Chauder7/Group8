@@ -29,6 +29,23 @@ const addonsOf = (line) => (line.addons || []).filter((a) => a in ADDON_PRICE);
 const unitPrice = (line) => line.price + addonsOf(line).reduce((s, a) => s + ADDON_PRICE[a], 0);
 let openLine = null;   // which drink's add-on list is open in the cart
 
+/* Promo codes + specials are set in the admin pages (localStorage: cc-promos, cc-specials) */
+const readJ = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
+const ymd = () => new Date().toLocaleDateString('en-CA');
+const escH = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let promoCode = readJ('cc-promo', ''), promoMsg = '';
+const subtotal = () => Object.keys(cart).reduce((s, k) => s + cart[k].qty * unitPrice(cart[k]), 0);
+const findPromo = (c) => readJ('cc-promos', []).find((p) => p.code === String(c).trim().toUpperCase() && !p.off && (!p.exp || p.exp >= ymd()));
+const discountOf = () => {
+  const p = promoCode && findPromo(promoCode), sub = subtotal();
+  if (!p || sub < (+p.min || 0)) return 0;
+  return Math.min(sub, p.type === 'percent' ? Math.round(sub * p.value / 100) : +p.value);
+};
+
+/* Pickup or delivery details (remembered so a returning customer does not retype them) */
+const checkout = Object.assign({ mode: 'Pickup', phone: '', address: '' }, readJ('cc-checkout', {}));
+const saveCheckout = () => { try { localStorage.setItem('cc-checkout', JSON.stringify(checkout)); } catch (e) { } };
+
 function cartLine(k) {
   const l = cart[k], adds = addonsOf(l);
   let extra = '';
@@ -47,14 +64,24 @@ function cartLine(k) {
         <span class="qty"><button type="button" data-k="${k}" data-d="-1" aria-label="Remove one">−</button>${l.qty}<button type="button" data-k="${k}" data-d="1" aria-label="Add one">+</button></span>${extra}</div>`;
 }
 function renderCart() {
-  if (!$('cartBody')) return;   // no order drawer on this page
+  if (!$('cartBody')) return;   // pages without the order drawer (admin login)
   const keys = Object.keys(cart);
   $('cartCount').textContent = keys.reduce((s, k) => s + cart[k].qty, 0);
   $('cartTotal').hidden = !keys.length;
-  $('totalAmt').textContent = peso(keys.reduce((s, k) => s + cart[k].qty * unitPrice(cart[k]), 0));
+  $('totalAmt').textContent = peso(subtotal() - discountOf());
   $('cartBody').innerHTML = keys.length
-    ? keys.map(cartLine).join('')
-    : '<p>Nothing here yet — add something from the menu.</p><a class="btn" href="/Group8/AmenCode/menu.html">Browse the menu</a>';
+    ? keys.map(cartLine).join('') +
+    `<div class="cart__promo" style="display:flex;gap:8px;padding:16px 0 4px"><input id="promoIn" type="text" placeholder="Promo code" aria-label="Promo code" value="${escH(promoCode)}" style="flex:1;min-width:0;min-height:40px;padding:0 10px;border:1.693px solid var(--ink);background:var(--bg);font:400 13px var(--mono);text-transform:uppercase"><button class="btn" id="promoBtn" type="button">Apply</button></div>` +
+    `<p class="mono-sm" role="status" style="padding-bottom:12px">${discountOf() ? escH(promoCode) + ' applied: −' + peso(discountOf()) : escH(promoMsg)}</p>` +
+    `<div class="cart__co"><p class="mono-sm">How do you want it?</p>
+        <div class="cart__mode" role="radiogroup" aria-label="Pickup or delivery">
+          <label><input type="radio" name="coMode" value="Pickup"${checkout.mode === 'Pickup' ? ' checked' : ''}> Pickup</label>
+          <label><input type="radio" name="coMode" value="Delivery"${checkout.mode === 'Delivery' ? ' checked' : ''}> Delivery</label></div>
+        <input id="coPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Mobile number" aria-label="Mobile number" value="${escH(checkout.phone)}">
+        <input id="coAddr" type="text" autocomplete="street-address" placeholder="Delivery address (street, barangay, city)" aria-label="Delivery address" value="${escH(checkout.address)}"${checkout.mode === 'Delivery' ? '' : ' hidden'}>
+        <p class="mono-sm cart__comsg" id="coMsg" role="status"></p></div>` +
+    '<button class="btn" id="placeOrder" type="button">Place order</button>'
+    : '<p>Nothing here yet — add something from the menu.</p><a class="btn" href="menu.html">Browse the menu</a>';
   syncAddonPage();
 }
 function toggleCart(open) {
@@ -62,7 +89,12 @@ function toggleCart(open) {
   $('scrim').classList.toggle('is-open', open);
   $('cart').setAttribute('aria-hidden', !open);
 }
+function unavailable(key) {   // sold out or removed by the admin
+  const id = key.split(':').slice(0, 2).join(':');
+  return !!(readJ('cc-menu', {})[key] || {}).out || (readJ('cc-menu-items', {}).removed || []).includes(id);
+}
 function addToCart(key, name, price, btn) {
+  if (unavailable(key)) return;
   cart[key] = cart[key] || { name, price: +price, qty: 0 };
   cart[key].qty++;
   save(); renderCart();
@@ -74,6 +106,17 @@ $('cartBody')?.addEventListener('click', (e) => {
   cart[b.dataset.k].qty += +b.dataset.d;
   if (cart[b.dataset.k].qty < 1) delete cart[b.dataset.k];
   save(); renderCart();
+});
+/* Promo code: apply / clear */
+$('cartBody')?.addEventListener('click', (e) => {
+  if (!e.target.closest('#promoBtn')) return;
+  const c = $('promoIn').value.trim().toUpperCase(), p = c && findPromo(c);
+  if (!c) { promoCode = ''; promoMsg = ''; }
+  else if (!p) { promoCode = ''; promoMsg = 'That code is not valid.'; }
+  else if (subtotal() < (+p.min || 0)) { promoCode = ''; promoMsg = 'Minimum order for this code is ' + peso(p.min) + '.'; }
+  else { promoCode = c; promoMsg = ''; }
+  try { localStorage.setItem('cc-promo', JSON.stringify(promoCode)); } catch (x) { }
+  renderCart();
 });
 /* Add-ons for one drink: open/close the list, tick/untick a add-on */
 function toggleAddon(key, name, on) {
@@ -131,7 +174,7 @@ function attachFromPage(b) {
 }
 if ($('addonTarget')) $('addonTarget').addEventListener('change', markAddonButtons);
 
-if ($('cart')) {   // pages without the order drawer (admin login) skip this
+if ($('cart')) {   // pages without the order drawer skip this
   $('openCart').onclick = () => toggleCart(true);
   $('closeCart').onclick = $('scrim').onclick = () => toggleCart(false);
 }
@@ -146,6 +189,94 @@ document.addEventListener('click', (e) => {
   if (b.dataset.key.startsWith('addon:')) attachFromPage(b);
   else addToCart(b.dataset.key, b.dataset.name, b.dataset.price, b);
 });
+
+/* Pickup / delivery fields in the cart */
+$('cartBody')?.addEventListener('input', (e) => {
+  if (e.target.id === 'coPhone') checkout.phone = e.target.value.trim();
+  else if (e.target.id === 'coAddr') checkout.address = e.target.value.trim();
+  else return;
+  saveCheckout();
+});
+$('cartBody')?.addEventListener('change', (e) => {
+  if (e.target.name !== 'coMode') return;
+  checkout.mode = e.target.value; saveCheckout();
+  $('coAddr').hidden = checkout.mode !== 'Delivery';
+  $('coMsg').textContent = '';
+});
+
+/* ---------- Place order: saved for the admin panel (adminOrders.html) ---------- */
+$('cartBody')?.addEventListener('click', (e) => {
+  if (!e.target.closest('#placeOrder')) return;
+  const keys = Object.keys(cart);
+  if (!keys.length) return;
+  const delivery = checkout.mode === 'Delivery', digits = checkout.phone.replace(/\D/g, '');
+  if (delivery && checkout.address.length < 8) { $('coMsg').textContent = 'Please enter your full delivery address.'; return $('coAddr').focus(); }
+  if (delivery && digits.length < 7) { $('coMsg').textContent = 'Please enter a mobile number so the rider can reach you.'; return $('coPhone').focus(); }
+  const s = getSession();
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem('cc-orders') || '[]'); } catch (x) { orders = []; }
+  const sub = subtotal(), disc = discountOf(), used = disc ? promoCode : '';
+  orders.push({
+    id: Date.now(), at: new Date().toISOString(), status: 'New',
+    customer: s ? (s.name || s.email) : 'Guest', email: s ? s.email : '',
+    mode: checkout.mode, phone: checkout.phone, address: delivery ? checkout.address : '',
+    items: keys.map((k) => ({ name: cart[k].name, qty: cart[k].qty, addons: addonsOf(cart[k]) })),
+    total: sub - disc, subtotal: sub, discount: disc, promo: used
+  });
+  try { localStorage.setItem('cc-orders', JSON.stringify(orders)); }
+  catch (x) { alert('Could not save your order in this browser.'); return; }
+  if (used) { const ps = readJ('cc-promos', []); ps.forEach((p) => { if (p.code === used) p.used = (p.used || 0) + 1; }); try { localStorage.setItem('cc-promos', JSON.stringify(ps)); } catch (x) { } }
+  promoCode = ''; promoMsg = ''; try { localStorage.removeItem('cc-promo'); } catch (x) { }
+  cart = {}; save(); renderCart();
+  $('cartBody').innerHTML = delivery
+    ? `<p>Order placed! We'll deliver to ${escH(checkout.address)}. Pay on delivery. Salamat!</p>`
+    : '<p>Order placed! Pay when you pick up. Salamat!</p>';
+});
+
+/* ---------- Menu changes made in the admin panel (adminOrders.html) ----------------
+   cc-menu       = { "hot-coffee:0:Medium": { price, out } }   new price / sold out
+   cc-menu-items = { added: [items], removed: [ids] }          items added or deleted
+   An item id is "category:number" (added items: "tea:c1k2j"). */
+function menuRowHtml(i) {
+  const sizes = i.sizes.map((z) => {
+    const nm = i.name + (z.label ? ' (' + z.label[0] + ')' : '');
+    return `<div class="size">${z.label ? `<small>${escH(z.label)}</small>` : ''}<b>${peso(z.price)}</b>
+      <button class="add" type="button" aria-label="Add ${escH(nm)} to order" data-name="${escH(nm)}" data-price="${+z.price}" data-key="${escH(i.id)}:${escH(z.label)}">+</button></div>`;
+  }).join('');
+  return `<li class="mrow" data-added><span class="mrow__no">00</span><img class="mrow__img" src="${escH(i.img || 'chicken-poppers.jpg')}" alt="${escH(i.name)}">
+    <div><h3>${escH(i.name)}<span class="tag">New</span></h3><p>${escH(i.desc || '')}</p></div><div class="mrow__sizes">${sizes}</div></li>`;
+}
+function applyMenu() {
+  const ov = readJ('cc-menu', {}), it = readJ('cc-menu-items', {}), removed = it.removed || [], added = it.added || [];
+  document.querySelectorAll('.menu__list').forEach((list) => {
+    list.querySelectorAll('.mrow[data-added]').forEach((r) => r.remove());
+    added.filter((i) => i.cat === list.id).forEach((i) => list.insertAdjacentHTML('beforeend', menuRowHtml(i)));
+    let n = 0;
+    list.querySelectorAll('.mrow').forEach((row) => {
+      const btns = [...row.querySelectorAll('button.add[data-key]')];
+      if (!btns.length) return;
+      row.hidden = removed.includes(btns[0].dataset.key.split(':').slice(0, 2).join(':'));
+      btns.forEach((b) => {
+        const o = ov[b.dataset.key] || {}, price = (o.price || b.dataset.base || b.dataset.price);
+        b.dataset.base = b.dataset.base || b.dataset.price;          // remember the original price
+        b.dataset.price = price;
+        const p = b.parentElement.querySelector('b'); if (p) p.textContent = peso(price);
+        b.disabled = !!o.out;
+        b.textContent = o.out ? '✕' : '+';
+        if (o.out) b.setAttribute('aria-label', 'Sold out'); else b.setAttribute('aria-label', 'Add ' + b.dataset.name + ' to order');
+      });
+      const out = btns.every((b) => b.disabled), tag = row.querySelector('.tag--out');
+      row.classList.toggle('is-out', out);
+      if (out && !tag) row.querySelector('h3').insertAdjacentHTML('beforeend', '<span class="tag tag--out">Sold out</span>');
+      if (!out && tag) tag.remove();
+      if (!row.hidden) row.querySelector('.mrow__no').textContent = String(++n).padStart(2, '0');
+    });
+  });
+}
+if (document.querySelector('.menu__list')) {
+  try { applyMenu(); } catch (x) { }
+  window.addEventListener('storage', (e) => { if (e.key === 'cc-menu' || e.key === 'cc-menu-items') applyMenu(); });
+}
 
 /* ---------- Newsletter ------------------------------------------------------ */
 $('subscribe')?.addEventListener('submit', (e) => {
@@ -182,6 +313,19 @@ if ($('tabs')) {
   show(location.hash.slice(1));
 }
 
+/* ---------- Menu: live specials (set in adminMenu.html) ----------------------------- */
+if ($('tabs') && document.querySelector('section.menu')) {
+  const t = ymd(), live = readJ('cc-specials', []).filter((s) => !s.off && s.from <= t && s.to >= t);
+  if (live.length) {
+    const sec = document.createElement('section');
+    sec.className = 'container extras';
+    sec.style.cssText = 'grid-template-columns:1fr;padding-bottom:0';
+    sec.innerHTML = '<article class="extra"><div class="extra__head"><h2>Specials</h2><span>Limited</span></div><p class="extra__sub">Available for a short time</p><ul>' +
+      live.map((s) => `<li class="xrow"><div><h3>${escH(s.name)}${s.occ ? `<span class="tag">${escH(s.occ)}</span>` : ''}</h3><p>${escH(s.desc || '')}</p></div><div class="xrow__r"><b>${peso(s.price)}</b><button class="add" type="button" aria-label="Add ${escH(s.name)} to order" data-name="${escH(s.name)}" data-price="${+s.price}" data-key="special:${+s.id}">+</button></div></li>`).join('') + '</ul></article>';
+    document.querySelector('section.menu').before(sec);
+  }
+}
+
 /* ---------- Menu: pick your drink -------------------------------------------- */
 if ($('cups')) {
   const cups = [...document.querySelectorAll('.cup')];
@@ -192,13 +336,9 @@ if ($('cups')) {
     $('pNo').textContent = `No. ${i + 1} of ${cups.length} · Favorite`;
     $('pName').textContent = d.name; $('pDesc').textContent = d.desc;
     $('pPrice').textContent = peso(d.price); $('pSwatch').style.background = d.color;
-    if (d.img && $('pImg')) {
-      $('pImg').src = d.img;
-      $('pImg').alt = d.name;
-    }
   };
   $('cups').addEventListener('click', (e) => { const c = e.target.closest('.cup'); if (c) pick(cups.indexOf(c)); });
-  $('pAdd').addEventListener('click', () => { const d = cups[sel].dataset; addToCart(d.key, d.name + ' (L)', d.price); toggleCart(true); });
+  $('pAdd').addEventListener('click', () => { const d = cups[sel].dataset; if (unavailable(d.key)) return; addToCart(d.key, d.name + ' (L)', d.price); toggleCart(true); });
 }
 
 /* ---------- Account button in the header (every page) ------------------------ */
@@ -207,7 +347,9 @@ const SESSION_KEY = 'cc-session';   // who is signed in (login.html saves it her
 function getSession() {
   try {
     const s = JSON.parse(localStorage.getItem(SESSION_KEY));
-    return s && s.email ? s : null;
+    if (!(s && s.email)) return null;
+    const u = (JSON.parse(localStorage.getItem('cc-users') || '{}'))[s.email];
+    return u && !u.disabled ? s : null;   // removed or suspended accounts are signed out
   } catch (err) { return null; }
 }
 
@@ -366,6 +508,7 @@ function initAccountPage() {
     busy(form, true);
     try {
       const user = (read(USERS_KEY) || {})[email];
+      if (user && user.disabled) { $('signin-status').textContent = 'This account is suspended. Please contact the shop.'; busy(form, false); return; }
       const hash = user ? await hashPassword(password, user.salt) : '';
       if (user && hash === user.hash) {
         form.reset();
@@ -406,7 +549,7 @@ function initAccountPage() {
     busy(form, true);
     try {
       const salt = newSalt();
-      users[email] = { name, salt, hash: await hashPassword(password, salt) };
+      users[email] = { name, salt, hash: await hashPassword(password, salt), created: new Date().toISOString() };
       if (write(USERS_KEY, users)) {
         form.reset();
         startSession(email, name);

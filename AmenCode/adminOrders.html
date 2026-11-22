@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order queue · Admin · Café Centígrado</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=DM+Mono:wght@400&family=Hanken+Grotesk:wght@400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../AmenCode/styles.css">
+    <link rel="stylesheet" href="../AmenCode/page.css">
+</head>
+
+<body class="sub" data-page="admin-orders">
+    <header class="header">
+        <div class="container header__inner">
+            <a class="logo" href="../AmenCode/index.html">
+                <img class="logo__mark" src="../AmenPhoto/logo-mark.png" alt="">
+                <span class="logo__text"><span class="logo__name">Café Centígrado</span><span
+                        class="logo__sub">Admin</span></span>
+            </a>
+            <nav class="nav" aria-label="Primary"><a class="nav__link" href="../AmenCode/index.html">← Back to site</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- ORDER QUEUE PAGE. admin.js sends you to adminLogin.html if you are not signed in. -->
+        <section class="container adm" id="dash" hidden aria-label="Admin panel">
+            <div class="adm__bar">
+                <nav class="adm__tabs" id="tabs" aria-label="Admin sections">
+                    <a class="btn btn--line" href="../AmenCode/adminAccounts.html">Accounts</a>
+                    <a class="btn btn--line" href="../AmenCode/adminMenu.html">Menu</a>
+                    <a class="btn btn--line is-on" href="../AmenCode/adminOrders.html" aria-current="page">Order
+                        queue</a>
+                </nav>
+                <div><span class="mono-sm" id="who"></span> <button class="btn btn--line" type="button" id="logout">Log
+                        out</button></div>
+            </div>
+            <div class="adm__stats" id="stats"></div>
+            <div class="adm__sub" id="subtabs" role="group" aria-label="Section" hidden></div>
+            <div id="panel"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__inner">
+            <div class="footer__bottom">
+                <span>© 2026 Café Centígrado Manila · Admin</span>
+                <nav class="footer__nav" aria-label="Footer"><a href="../AmenCode/menu.html">View the menu</a><a
+                        href="../AmenCode/index.html">Back to site</a><a href="#top">Back to top ↑</a></nav>
+            </div>
+        </div>
+    </footer>
+    <script src="../AmenCode/adminJS.js"></script>
+</body>
+
+</html>
