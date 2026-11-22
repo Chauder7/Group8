@@ -342,11 +342,20 @@ body.sub .header {
 
 .mrow {
   display: grid;
-  grid-template-columns: 48px 1fr auto;
+  grid-template-columns: 48px 64px 1fr auto;
   align-items: center;
-  gap: 0;
+  gap: 16px;
   padding: 24px 0;
   border-bottom: 1.693px solid var(--hair);
+}
+
+.mrow__img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+  background: var(--beige);
 }
 
 .mrow__no {
