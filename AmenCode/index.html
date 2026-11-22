@@ -10,7 +10,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=DM+Mono:wght@400&family=Hanken+Grotesk:wght@400&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="/Group8/AmenCode/styles.css">
+  <link rel="stylesheet" href="/AmenCode/styles.css">
 </head>
 
 <body>
@@ -18,16 +18,16 @@
   <header class="header">
     <div class="container header__inner">
       <a class="logo" href="#top">
-        <img class="logo__mark" src="/Group8/AmenPhoto/logo-mark.png" alt="">
+        <img class="logo__mark" src="/AmenPhoto/logo-mark.png" alt="">
         <span class="logo__text"><span class="logo__name">Café Centígrado</span><span class="logo__sub">Sta. Ana ·
             Manila</span></span>
       </a>
       <nav class="nav" aria-label="Primary">
         <div class="nav__links" id="navLinks">
           <a class="nav__link is-active" href="#top">Home</a><a class="nav__link"
-            href="/Group8/AmenCode/about.html">About</a><a class="nav__link"
-            href="/Group8/AmenCode/menu.html">Menu</a><a class="nav__link"
-            href="/Group8/AmenCode/addons.html">Add-ons</a>
+            href="/AmenCode/about.html">About</a><a class="nav__link"
+            href="/AmenCode/menu.html">Menu</a><a class="nav__link"
+            href="/AmenCode/addons.html">Add-ons</a>
         </div>
         <!-- ===== ACCOUNT BUTTON =====
     Paste this block inside <nav class="nav">, just before the Order button, on every page.
@@ -45,8 +45,8 @@
               <p class="mono-sm">Account</p>
               <p class="account__text">You're not signed in.</p>
               <div class="account__actions">
-                <a class="btn btn--fill" href="/Group8/AmenCode/SignUp.html">Sign in</a>
-                <a class="btn btn--line" href="/Group8/AmenCode/SignUp.html#signup">Create account</a>
+                <a class="btn btn--fill" href="/AmenCode/SignUp.html">Sign in</a>
+                <a class="btn btn--line" href="/AmenCode/SignUp.html#signup">Create account</a>
               </div>
             </div>
             <div id="accountIn" hidden>
@@ -54,7 +54,7 @@
               <p class="account__name" id="accountName"></p>
               <p class="mono-sm account__email" id="accountEmail"></p>
               <div class="account__actions">
-                <a class="btn btn--fill" href="/Group8/AmenCode/SignUp.html">My account</a>
+                <a class="btn btn--fill" href="/AmenCode/SignUp.html">My account</a>
                 <button class="btn btn--line" type="button" id="accountOutBtn">Log out</button>
               </div>
             </div>
@@ -78,8 +78,8 @@
           <p class="hero__text">Bringing you high quality coffee drinks in the city. Iced lattes, frappés and fruity
             coolers on Tejeron Street — open daily from 12 noon.</p>
           <div class="hero__btns">
-            <a class="btn btn--fill" href="/Group8/AmenCode/menu.html">Order for pickup →</a>
-            <a class="btn btn--line" href="/Group8/AmenCode/menu.html">Order for pickup</a>
+            <a class="btn btn--fill" href="/AmenCode/menu.html">Order for pickup →</a>
+            <a class="btn btn--line" href="/AmenCode/menu.html">Order for pickup</a>
           </div>
           <dl class="stats">
             <div>
@@ -99,7 +99,7 @@
         <figure class="hero__figure">
           <div class="hero__img">
             <!-- Replace: PHOTO/best.jpg -->
-            <img src="/Group8/AmenPhoto/best.jpg" alt="Four Café Centígrado drinks under the words Pick Your Drink">
+            <img src="/AmenPhoto/best.jpg" alt="Four Café Centígrado drinks under the words Pick Your Drink">
           </div>
           <figcaption class="loc"><span>Find us</span><b>2543 Tejeron Street</b></figcaption>
           <a class="badge" href="#pick"><span class="badge__in">Try<br>the 4</span></a>
@@ -123,7 +123,7 @@
         </div>
         <div class="pick__stage">
           <!-- Replace: PHOTO/best.jpg -->
-          <img src="/Group8/AmenPhoto/best.jpg"
+          <img id="pImg" src="/AmenPhoto/best.jpg"
             alt="Iced mocha, mocha frappé, mango popping boba and matcha frappé in Café Centígrado cups">
           <div class="pick__cups" id="cups" role="radiogroup" aria-label="Choose a drink"></div>
         </div>
@@ -147,19 +147,19 @@
         <p class="eyebrow">Explore</p>
         <h2 class="h2-lg">Get to know us</h2>
         <div class="cards">
-          <a class="card" href="/Group8/AmenCode/about.html">
+          <a class="card" href="/AmenCode/about.html">
             <p class="card__tag">01 — About</p>
             <h3>Our story</h3>
             <p class="card__text">The little °C on Tejeron — who we are and how we brew.</p><span
               class="card__arrow">→</span>
           </a>
-          <a class="card" href="/Group8/AmenCode/menu.html">
+          <a class="card" href="/AmenCode/menu.html">
             <p class="card__tag">02 — Menu</p>
             <h3>Full menu</h3>
             <p class="card__text">Coffee, non-coffee, frappés and late-night bites.</p><span
               class="card__arrow">→</span>
           </a>
-          <a class="card" href="/Group8/AmenCode/addons.html">
+          <a class="card" href="/AmenCode/addons.html">
             <p class="card__tag">03 — Add-ons</p>
             <h3>Make it yours</h3>
             <p class="card__text">Extra shots, milk swaps, syrups and toppings.</p><span class="card__arrow">→</span>
@@ -238,7 +238,7 @@
     <div class="cart__body" id="cartBody"></div>
     <div class="cart__total" id="cartTotal" hidden><span>Total</span><span id="totalAmt">₱0</span></div>
   </aside>
-  <script src="/Group8/AmenCode/script.js"></script>
+  <script src="/AmenCode/script.js"></script>
 </body>
 
 </html>

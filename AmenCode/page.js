@@ -192,6 +192,10 @@ if ($('cups')) {
     $('pNo').textContent = `No. ${i + 1} of ${cups.length} · Favorite`;
     $('pName').textContent = d.name; $('pDesc').textContent = d.desc;
     $('pPrice').textContent = peso(d.price); $('pSwatch').style.background = d.color;
+    if (d.img && $('pImg')) {
+      $('pImg').src = d.img;
+      $('pImg').alt = d.name;
+    }
   };
   $('cups').addEventListener('click', (e) => { const c = e.target.closest('.cup'); if (c) pick(cups.indexOf(c)); });
   $('pAdd').addEventListener('click', () => { const d = cups[sel].dataset; addToCart(d.key, d.name + ' (L)', d.price); toggleCart(true); });

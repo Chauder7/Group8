@@ -2,10 +2,10 @@
 // Names come from your Figma layers. Only Choco Chip Cream's description/price
 // were visible in the design; edit the others here.
 const DRINKS = [
- { name: 'Choco Chip Cream', desc: 'Blended chocolate, choco chips, whipped cream', price: 200, color: '#6b4a35' },
- { name: 'Caramel Coffee', desc: 'Iced caramel coffee', price: 190, color:'#a8794f' },
- { name: 'Passionfruit Yakult', desc: 'Passionfruit with Yakult and popping boba', price: 170, color: '#e8a33a' },
- { name: 'Green Apple Yakult', desc: 'Green apple with Yakult', price: 170, color:'#9db35a' }
+ { name: 'Choco Chip Cream', desc: 'Blended chocolate, choco chips, whipped cream', price: 200, color: '#6b4a35' , img: '../AmenPhoto/best.jpg' },
+ { name: 'Caramel Coffee', desc: 'Iced caramel coffee', price: 190, color:'#a8794f' , img: '../AmenPhoto/caramel-coffee.jpg' },
+ { name: 'Passionfruit Yakult', desc: 'Passionfruit with Yakult and popping boba', price: 170, color: '#e8a33a' , img: '../AmenPhoto/passionfruit-yakult.jpg' },
+ { name: 'Green Apple Yakult', desc: 'Green apple with Yakult', price: 170, color:'#9db35a' , img: '../AmenPhoto/green-apple-yakult.jpg' }
 ];
 const HOURS = [
  ['Sunday', '12 NN — 3 AM'], ['Monday', '12 NN — 12 MN'], ['Tuesday', '12 NN — 12 MN'],
@@ -35,6 +35,10 @@ function select(i) {
  $('pDesc').textContent = d.desc;
  $('pPrice').textContent = peso(d.price);
  $('pSwatch').style.background = d.color;
+ if (d.img && $('pImg')) {
+    $('pImg').src = d.img;
+    $('pImg').alt = d.name;
+  }
 }
 $('cups').addEventListener('click', (e) => {
  const c = e.target.closest('.cup');
