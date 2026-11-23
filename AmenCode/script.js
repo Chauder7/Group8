@@ -54,7 +54,7 @@ function renderCart() {
  $('cartBody').innerHTML = ids.length
    ? ids.map((k) => `<div class="cart__line"><span class="cart__name">${DRINKS[k].name}<small>${peso(DRINKS[k].price)}</small></span>
        <span class="qty"><button type="button" data-k="${k}" data-d="-1" aria-label="Remove one">−</button>${cart[k]}<button type="button" data-k="${k}" data-d="1"aria-label="Add one">+</button></span></div>`).join('')
-   : `<p>Nothing here yet — add something from the menu.</p><a class="btn"href="#pick" id="browse">Browse the menu</a>`;
+   : `<p>Nothing here yet — add something from the menu.</p><a class="btn"href="menu.html" id="browse">Browse the menu</a>`;
 }
 function toggleCart(open) {
  $('cart').classList.toggle('is-open', open);
