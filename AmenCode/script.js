@@ -2,10 +2,10 @@
 // Names come from your Figma layers. Only Choco Chip Cream's description/price
 // were visible in the design; edit the others here.
 const DRINKS = [
- { name: 'Choco Chip Cream', desc: 'Blended chocolate, choco chips, whipped cream', price: 200, color: '#6b4a35' , img: '../AmenPhoto/best.jpg' },
- { name: 'Caramel Coffee', desc: 'Iced caramel coffee', price: 190, color:'#a8794f' , img: '../AmenPhoto/caramel-coffee.jpg' },
- { name: 'Passionfruit Yakult', desc: 'Passionfruit with Yakult and popping boba', price: 170, color: '#e8a33a' , img: '../AmenPhoto/passionfruit-yakult.jpg' },
- { name: 'Green Apple Yakult', desc: 'Green apple with Yakult', price: 170, color:'#9db35a' , img: '../AmenPhoto/green-apple-yakult.jpg' }
+ { name: 'Choco Chip Cream', desc: 'Blended chocolate, choco chips, whipped cream', price: 200, color: '#6b4a35' , img: '/AmenPhoto/best.jpg' },
+ { name: 'Caramel Coffee', desc: 'Iced caramel coffee', price: 190, color:'#a8794f' , img: '/AmenPhoto/caramel-coffee.jpg' },
+ { name: 'Passionfruit Yakult', desc: 'Passionfruit with Yakult and popping boba', price: 170, color: '#e8a33a' , img: '/AmenPhoto/passionfruit-yakult.jpg' },
+ { name: 'Green Apple Yakult', desc: 'Green apple with Yakult', price: 170, color:'#9db35a' , img: '/AmenPhoto/green-apple-yakult.jpg' }
 ];
 const HOURS = [
  ['Sunday', '12 NN — 3 AM'], ['Monday', '12 NN — 12 MN'], ['Tuesday', '12 NN — 12 MN'],
@@ -56,6 +56,13 @@ function renderCart() {
        <span class="qty"><button type="button" data-k="${k}" data-d="-1" aria-label="Remove one">−</button>${cart[k]}<button type="button" data-k="${k}" data-d="1"aria-label="Add one">+</button></span></div>`).join('')
    : `<p>Nothing here yet — add something from the menu.</p><a class="btn"href="menu.html" id="browse">Browse the menu</a>`;
 }
+$('prevCup').addEventListener('click', () => {
+  select((selected - 1 + DRINKS.length) % DRINKS.length);
+});
+
+$('nextCup').addEventListener('click', () => {
+  select((selected + 1) % DRINKS.length);
+});
 function toggleCart(open) {
  $('cart').classList.toggle('is-open', open);
  $('scrim').classList.toggle('is-open', open);

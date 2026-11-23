@@ -116,7 +116,7 @@
       <div class="ticker__track" id="ticker"></div>
     </div>
 
-    <!-- PICK YOUR DRINK -->
+    <!-- FAN FAVORITES -->
     <section class="pick" id="pick">
       <div class="container pick__inner">
         <div class="pick__head">
@@ -128,10 +128,14 @@
             are you choosing today?</p>
         </div>
         <div class="pick__stage">
-          <!-- Replace: PHOTO/best.jpg -->
+          <button class="pick__arrow pick__arrow--prev" id="prevCup" type="button" aria-label="Previous drink">‹</button>
+
           <img id="pImg" src="/AmenPhoto/best.jpg"
             alt="Iced mocha, mocha frappé, mango popping boba and matcha frappé in Café Centígrado cups">
-          <div class="pick__cups" id="cups" role="radiogroup" aria-label="Choose a drink"></div>
+          
+          <button class="pick__arrow pick__arrow--next" id="nextCup" type="button" aria-label="Next drink">›</button>
+
+            <div class="pick__cups" id="cups" role="radiogroup" aria-label="Choose a drink"></div>
         </div>
         <div class="pick__info">
           <span class="pick__swatch" id="pSwatch"></span>

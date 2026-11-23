@@ -329,16 +329,23 @@ if ($('tabs') && document.querySelector('section.menu')) {
 /* ---------- Menu: pick your drink -------------------------------------------- */
 if ($('cups')) {
   const cups = [...document.querySelectorAll('.cup')];
-  let sel = cups.findIndex((c) => c.classList.contains('is-on')) || 0;
+  let sel = Math.max(0, cups.findIndex((c) => c.classList.contains('is-on')));
   const pick = (i) => {
     sel = i; const d = cups[i].dataset;
     cups.forEach((c, j) => { c.classList.toggle('is-on', j === i); c.setAttribute('aria-checked', j === i); c.firstElementChild.textContent = j === i ? '✓' : j + 1; });
     $('pNo').textContent = `No. ${i + 1} of ${cups.length} · Favorite`;
     $('pName').textContent = d.name; $('pDesc').textContent = d.desc;
     $('pPrice').textContent = peso(d.price); $('pSwatch').style.background = d.color;
+    if (d.img && $('pImg')) {
+      $('pImg').src = d.img;
+      $('pImg').alt = d.name;
+    }
   };
   $('cups').addEventListener('click', (e) => { const c = e.target.closest('.cup'); if (c) pick(cups.indexOf(c)); });
+  $('prevCup')?.addEventListener('click', () => pick((sel - 1 + cups.length) % cups.length));
+  $('nextCup')?.addEventListener('click', () => pick((sel + 1) % cups.length));
   $('pAdd').addEventListener('click', () => { const d = cups[sel].dataset; if (unavailable(d.key)) return; addToCart(d.key, d.name + ' (L)', d.price); toggleCart(true); });
+  pick(sel);
 }
 
 /* ---------- Account button in the header (every page) ------------------------ */
@@ -573,3 +580,4 @@ function initAccountPage() {
   render();
 }
 if ($('signin-form')) initAccountPage();
+
