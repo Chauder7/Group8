@@ -52,6 +52,59 @@ body.sub .header {
   color: var(--brown);
 }
 
+/* MENU PAGE HERO */
+
+body[data-page="menu"] .page-hero {
+  background: #f3eee6 url("../AmenPhoto/menu-hero.jpg") right center / auto 100% no-repeat;
+}
+
+@media (max-width: 860px) {
+  body[data-page="menu"] .page-hero {
+    background:
+      linear-gradient(to right, rgba(243, 238, 230, 0.92) 55%, rgba(243, 238, 230, 0.55)),
+      url("../AmenPhoto/menu-hero.jpg") 75% center / cover no-repeat;
+  }
+}
+
+/* ABOUT PAGE HERO */
+body[data-page="about"] .page-hero {
+  background: #f3eee6 url("../AmenPhoto/about-hero.jpg") right center / auto 100% no-repeat;
+}
+
+@media (max-width: 860px) {
+  body[data-page="about"] .page-hero {
+    background:
+      linear-gradient(to right, rgba(243, 238, 230, 0.92) 55%, rgba(243, 238, 230, 0.55)),
+      url("../AmenPhoto/about-hero.jpg") 75% center / cover no-repeat;
+  }
+}
+
+/* ADDONS PAGE HERO */
+body[data-page="addons"] .page-hero {
+  background: #f3eee6 url("../AmenPhoto/addons-hero.jpg") right center / auto 100% no-repeat;
+}
+
+@media (max-width: 860px) {
+  body[data-page="addons"] .page-hero {
+    background:
+      linear-gradient(to right, rgba(243, 238, 230, 0.92) 55%, rgba(243, 238, 230, 0.55)),
+      url("../AmenPhoto/addons-hero.jpg") 75% center / cover no-repeat;
+  }
+}
+
+/* ACCOUNT / SIGNUP PAGE HERO */
+body[data-page="account"] .page-hero {
+  background: #f3eee6 url("../AmenPhoto/signup-hero.jpg") right center / auto 100% no-repeat;
+}
+
+@media (max-width: 860px) {
+  body[data-page="account"] .page-hero {
+    background:
+      linear-gradient(to right, rgba(243, 238, 230, 0.92) 55%, rgba(243, 238, 230, 0.55)),
+      url("../AmenPhoto/signup-hero.jpg") 75% center / cover no-repeat;
+  }
+}
+
 /* About */
 .tagline {
   border-top: 1.693px solid var(--ink);
