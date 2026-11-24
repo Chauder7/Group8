@@ -31,6 +31,15 @@
         </div>
         <a class="nav__link" href="index.html">← Back to site</a>
       </nav>
+
+<nav class="nav" aria-label="Primary">
+   <div class="adm__tabs" id="tabs" role="group" aria-label="Admin sections">
+    <a class="nav__link" href="../AmenCode/adminAccounts.html">Accounts</a>
+    <a class="nav__link is-active" href="../AmenCode/adminMenu.html" aria-current="page">Menu</a>
+    <a class="nav__link" href="../AmenCode/adminOrders.html">Order queue</a>
+</div>
+<button class="btn btn--line" type="button" id="logout">Log out</button>
+<span id="who" hidden></span>
         </div>
     </header>
 
@@ -46,6 +55,7 @@
 <button class="btn btn--line" type="button" id="logout">Log out</button>
                 <span class="mono-sm" id="who"></span>
             </div>
+            
             <div class="adm__stats" id="stats"></div>
             <div class="adm__sub" id="subtabs" role="group" aria-label="Section" hidden></div>
             <div id="panel"></div>
