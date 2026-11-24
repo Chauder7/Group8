@@ -287,7 +287,7 @@ $('subscribe')?.addEventListener('submit', (e) => {
 });
 
 /* ---------- Hours: highlight today + open/closed label (About) -------------- */
-if ($('hours')) {
+if ($('hours') && $('hours').rows.length) {
   const now = new Date(), today = now.getDay(), hr = now.getHours() + now.getMinutes() / 60;
   const rows = $('hours').rows;
   const close = (d) => (/3 AM/.test(rows[d].cells[1].textContent) ? 3 : 0);
@@ -327,7 +327,7 @@ if ($('tabs') && document.querySelector('section.menu')) {
 }
 
 /* ---------- Menu: pick your drink -------------------------------------------- */
-if ($('cups')) {
+if ($('cups') && document.querySelector('.cup')) {
   const cups = [...document.querySelectorAll('.cup')];
   let sel = Math.max(0, cups.findIndex((c) => c.classList.contains('is-on')));
   const pick = (i) => {
