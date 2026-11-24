@@ -62,7 +62,7 @@
     const a = read(K.admins, {})[s.email];
     return a && !a.disabled ? { email: s.email, ...a } : null;
   }
-  const can = (m, perm) => (m.mustChange ? perm === 'account' : PERMS[m.role].includes(perm));
+  const can = (m, perm) => (m.mustChange ? perm === 'account' : (PERMS[m.role] || []).includes(perm));
   function guard(perm) {                                  // every action calls this first
     const m = me();
     if (!m) { location.replace(LOGIN_URL); return null; }
@@ -125,9 +125,37 @@
     if (!subs.some(([id]) => id === sub[tab])) sub[tab] = subs[0][0];
     $('who').textContent = `${m.name} · ${m.role}`;
     $('subtabs').hidden = subs.length < 2;
-    $('subtabs').innerHTML = subs.map(([id, label]) => `<button class="btn btn--line${id === sub[tab] ? ' is-on' : ''}" type="button" data-sub="${id}">${label}</button>`).join('');
+    $('subtabs').innerHTML = subs.map(([id, label]) => { const n = badgeFor(id); return `<button class="btn btn--line${id === sub[tab] ? ' is-on' : ''}" type="button" data-sub="${id}" aria-pressed="${id === sub[tab]}">${label}${n === null ? '' : ` <span class="adm__badge">${n}</span>`}</button>`; }).join('');
+    if (!$('secHead')) $('panel').insertAdjacentHTML('beforebegin', '<div class="adm__sechead" id="secHead"></div>');
+    const info = SECTION_INFO[sub[tab]] || ['', ''];
+    $('secHead').innerHTML = `<h2>${esc(info[0])}</h2><p>${esc(info[1])}</p>`;
     $('stats').innerHTML = m.mustChange ? '' : statsFor(tab);
     ({ customers: renderCustomers, admins: renderAdmins, account: renderAccount, items: renderItems, promos: renderPromos, specials: renderSpecials, queue: renderQueue, today: () => renderOrders('today'), history: () => renderOrders('all') })[sub[tab]](m);
+  }
+  /* Section header text + the little count on each section button */
+  const SECTION_INFO = {
+    customers: ['Customers', 'Everyone who signed up on the site. Suspend, reset a password or remove an account.'],
+    admins: ['Admins', 'Who can sign in to this panel, and what each person is allowed to do.'],
+    account: ['My password', 'Change the password you use to sign in here.'],
+    items: ['Items & stock', 'Add drinks and food, change prices and mark things sold out.'],
+    promos: ['Promos', 'Discount codes customers type in the cart.'],
+    specials: ['Specials', 'Limited-time drinks that show on the menu page only during their dates.'],
+    queue: ['Queue', 'Pickup orders waiting to be made, oldest first.'],
+    today: ['Today', 'Everything ordered today.'],
+    history: ['All orders', 'Every order, with filters and CSV export.']
+  };
+  function badgeFor(id) {
+    const orders = read(K.orders, []);
+    switch (id) {
+      case 'queue': return orders.filter((o) => ACTIVE.includes(o.status)).length;
+      case 'today': return orders.filter(isToday).length;
+      case 'history': return orders.length;
+      case 'customers': return Object.keys(read(K.users, {})).length;
+      case 'admins': return Object.keys(read(K.admins, {})).length;
+      case 'promos': return read(K.promos, []).filter((p) => prStatus(p) === 'Active').length;
+      case 'specials': return read(K.specials, []).filter((s) => spStatus(s) === 'Live').length;
+      default: return null;
+    }
   }
   const stat = (n, l) => `<div><b>${n}</b><span class="mono-sm">${l}</span></div>`;
   const money = (list) => list.filter((o) => o.status !== 'Cancelled').reduce((s, o) => s + o.total, 0);
@@ -153,12 +181,10 @@
   const msg = (t) => { const el = $('formMsg'); if (el) el.textContent = t; };
 
   /* =====================================================================
-     ORDER QUEUE: queue, today, all orders. Each order shows pickup or the delivery address.
+     ORDER QUEUE: queue, today, all orders. Each order shows its pickup details.
      ===================================================================== */
   const itemsText = (o) => o.items.map((i) => `${i.qty}× ${i.name}${i.addons && i.addons.length ? ' (+ ' + i.addons.join(', ') + ')' : ''}`);
-  const where = (o) => (o.mode === 'Delivery'
-    ? `<b>Deliver to</b> ${esc(o.address || '—')}${o.phone ? `<br>☎ ${esc(o.phone)}` : ''}`
-    : `<b>Pickup</b> at the counter${o.phone ? ` · ☎ ${esc(o.phone)}` : ''}`);
+  const where = (o) => `<b>Pickup</b> at the counter${o.phone ? ` · ☎ ${esc(o.phone)}` : ''}`;
   const orderNo = (o) => '#' + String(o.id).slice(-5);
 
   function renderQueue() {
@@ -167,8 +193,8 @@
       const mins = Math.max(0, Math.round((Date.now() - new Date(o.at).getTime()) / 60000));
       const acts = [...NEXT[o.status], ['Cancel', 'Cancelled']].map(([label, to], n) => `<button class="btn ${n === 0 ? 'btn--fill' : 'btn--line'}" type="button" data-q="${o.id}" data-to="${to}">${label}</button>`).join('');
       return `<article class="qcard qcard--${o.status.replace(' ', '-').toLowerCase()}">
-      <div class="qcard__top"><h3>${orderNo(o)}</h3><span class="pill${o.status === 'On hold' ? ' pill--off' : ''}">${o.status}</span></div>
-      <p class="mono-sm">No. ${i + 1} in line · ${mins} min ago · ${esc(o.customer)}</p>
+      <div class="qcard__top"><h3>${orderNo(o)}</h3><span class="pill s-${o.status.replace(' ', '-').toLowerCase()}">${o.status}</span></div>
+      <p class="mono-sm">No. ${i + 1} in line · <span class="${mins >= 15 ? 'late' : ''}">${mins} min ago</span> · ${esc(o.customer)}</p>
       <p class="qcard__where">${where(o)}</p>
       <ul class="qcard__items">${itemsText(o).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
       <p class="qcard__total">${peso(o.total)}${o.discount ? ` <small>(${esc(o.promo)} −${peso(o.discount)})</small>` : ''}</p>
@@ -179,9 +205,7 @@
   function renderOrders(period) {
     const base = read(K.orders, []).slice().reverse().filter((o) => period === 'all' || isToday(o));
     const list = filter === 'All' ? base : base.filter((o) => o.status === filter);
-    const live = list.filter((o) => o.status !== 'Cancelled');
     const sum = `<p class="adm__sum"><b>${list.length}</b> order${list.length === 1 ? '' : 's'} · money made <b>${peso(money(list))}</b>
-      · ${peso(money(list.filter((o) => o.mode === 'Delivery')))} delivery (${live.filter((o) => o.mode === 'Delivery').length}) · ${peso(money(list.filter((o) => o.mode !== 'Delivery')))} pickup (${live.filter((o) => o.mode !== 'Delivery').length})
       <small>Cancelled orders are not counted.</small></p>`;
     $('panel').innerHTML = `<div class="adm__tools"><label class="mono-sm" for="flt">Show</label><select id="flt">${['All', ...STATUS].map((s) => `<option${s === filter ? ' selected' : ''}>${s}</option>`).join('')}</select><button class="btn btn--line" type="button" id="csv">Export CSV</button></div>` + sum +
       (list.length ? `<div class="adm__scroll"><table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Where</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>${list.map((o) => `<tr>
@@ -194,10 +218,10 @@
   }
   function exportCsv() {
     if (!guard('orders')) return;
-    const rows = [['Order', 'Date', 'Customer', 'Email', 'Type', 'Address', 'Phone', 'Items', 'Promo', 'Discount', 'Total', 'Status'],
-    ...read(K.orders, []).map((o) => [o.id, o.at, o.customer, o.email || '', o.mode || 'Pickup', o.address || '', o.phone || '', itemsText(o).join('; '), o.promo || '', o.discount || 0, o.total, o.status])];
+    const rows = [['Order', 'Date', 'Customer', 'Email', 'Phone', 'Items', 'Promo', 'Discount', 'Total', 'Status'],
+    ...read(K.orders, []).map((o) => [o.id, o.at, o.customer, o.email || '', o.phone || '', itemsText(o).join('; '), o.promo || '', o.discount || 0, o.total, o.status])];
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([rows.map((r) => r.map((c) => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n')], { type: 'text/csv' }));
+    a.href = URL.createObjectURL(new Blob([rows.map((r) => r.map((c) => { c = String(c); if (/^[=+\-@\t\r]/.test(c)) c = "'" + c; return '"' + c.replace(/"/g, '""') + '"'; }).join(',')).join('\n')], { type: 'text/csv' }));
     a.download = 'orders.csv'; a.click();
   }
 
@@ -250,8 +274,8 @@
       <button class="btn btn--fill" type="submit">Add to menu</button><p class="subscribe__msg" id="formMsg" role="status"></p></form>`;
 
     const groups = base.cats.map(([cid, cname]) => {
-      const rows = live.filter((i) => i.cat === cid);
-      return `<div class="grp-wrap"><div class="adm__tools grp-bar"><h3 class="grp">${esc(cname)}</h3><button class="btn btn--line" type="button" data-bulk="out">Mark all sold out</button><button class="btn btn--line" type="button" data-bulk="in">Restock all</button></div>
+      const rows = live.filter((i) => i.cat === cid), soldN = rows.filter((i) => i.sizes.every((z) => (ov[z.key] || {}).out)).length;
+      return `<div class="grp-wrap"><div class="adm__tools grp-bar"><h3 class="grp" data-fold tabindex="0" role="button" aria-expanded="true">${esc(cname)} <span class="adm__count">${rows.length}</span>${soldN ? ` <span class="adm__count adm__count--out">${soldN} sold out</span>` : ''}</h3><button class="btn btn--line" type="button" data-bulk="out">Mark all sold out</button><button class="btn btn--line" type="button" data-bulk="in">Restock all</button></div>
       <div class="adm__scroll"><table><thead><tr><th>Item</th><th>Price (₱) and stock</th><th></th></tr></thead><tbody>${rows.length ? rows.map((i) => `<tr>
         <td>${esc(i.name)}${i.built ? '' : ' <span class="pill">New</span>'}<br><small>${esc(i.desc)}</small></td>
         <td>${i.sizes.map((z) => { const o = ov[z.key] || {}; return `<div class="adm__size"><span class="mono-sm">${esc(z.label || 'One size')}</span><input type="number" min="1" aria-label="Price ${esc(i.name)} ${esc(z.label)}" data-price="${esc(z.key)}" data-base="${z.price}" value="${o.price || z.price}"><label><input type="checkbox" data-out="${esc(z.key)}"${o.out ? ' checked' : ''}> Sold out</label></div>`; }).join('')}</td>
@@ -260,7 +284,7 @@
 
     const goneHtml = gone.length ? `<div class="adm__gone"><h3 class="grp">Deleted items</h3><ul>${gone.map((i) => `<li><span>${esc(i.name)} <small>${esc(catName(i.cat))}</small></span><button class="btn btn--line" type="button" data-restore="${esc(i.id)}">Restore</button></li>`).join('')}</ul></div>` : '';
     $('panel').innerHTML = flashHtml() + form +
-      '<div class="adm__tools"><input type="search" id="msearch" placeholder="Search the menu…" aria-label="Search the menu"><span class="mono-sm" id="menuMsg" role="status">Change prices or tick “Sold out”, then save.</span></div>' + groups +
+      '<div class="adm__tools"><input type="search" id="msearch" placeholder="Search the menu…" aria-label="Search the menu"><button class="btn btn--line" type="button" data-foldall>Collapse all</button><span class="mono-sm" id="menuMsg" role="status">Change prices or tick “Sold out”, then save.</span></div>' + groups +
       '<p class="adm__save"><button class="btn btn--fill" type="button" id="saveMenu">Save menu changes</button> <button class="btn btn--line" type="button" id="resetMenu">Reset everything to original</button></p>' + goneHtml;
     if (lastCat && [...$('i-cat').options].some((o) => o.value === lastCat)) $('i-cat').value = lastCat;   // keep the category you were adding to
     syncItemForm();
@@ -388,6 +412,11 @@
       g.hidden = !any;
     });
   });
+  $('panel').addEventListener('click', (e) => {                // click a category title to fold it
+    const h = e.target.closest('h3.grp[data-fold]'); if (!h) return;
+    const g = h.closest('.grp-wrap'), off = g.classList.toggle('is-collapsed'); h.setAttribute('aria-expanded', !off);
+  });
+  $('panel').addEventListener('keydown', (e) => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('h3.grp[data-fold]')) { e.preventDefault(); e.target.click(); } });
   $('panel').addEventListener('change', (e) => {
     if (e.target.id === 'flt') { filter = e.target.value; return showView(); }
     if (e.target.id === 'i-cat' || e.target.id === 'i-mode') { if (e.target.id === 'i-cat') lastCat = e.target.value; return syncItemForm(); }
@@ -399,6 +428,11 @@
   $('panel').addEventListener('click', (e) => {
     const t = e.target.closest('button'); if (!t) return;
     if (t.id === 'csv') return exportCsv();
+    if (t.dataset.foldall !== undefined) {                      // collapse / expand every category
+      const groups = [...$('panel').querySelectorAll('.grp-wrap')], collapse = groups.some((g) => !g.classList.contains('is-collapsed'));
+      groups.forEach((g) => { g.classList.toggle('is-collapsed', collapse); const h = g.querySelector('h3.grp'); if (h) h.setAttribute('aria-expanded', !collapse); });
+      t.textContent = collapse ? 'Expand all' : 'Collapse all'; return;
+    }
     if (t.id === 'saveMenu') return saveMenu();
     if (t.id === 'resetMenu') {
       if (guard('menu') && confirm('Undo every change? Added items are deleted, deleted items come back, and prices and sold-out marks go back to the original.')) { localStorage.removeItem(K.menu); localStorage.removeItem(K.items); flash = 'Menu reset to the original.'; showView(); }
