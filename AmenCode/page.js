@@ -205,6 +205,24 @@ $('cartBody')?.addEventListener('change', (e) => {
 });
 
 /* ---------- Place order: saved for the admin panel (adminOrders.html) ---------- */
+
+/* Confirmation popup (built here, so no page needs extra HTML) */
+const confirmDlg = document.createElement('dialog');
+confirmDlg.className = 'confirm';
+confirmDlg.id = 'confirmOrder';
+confirmDlg.innerHTML = `<h3>Place your order?</h3>
+  <p class="confirm__sum" id="confirmSum"></p>
+  <div class="confirm__actions">
+    <button class="btn btn--line" type="button" id="confirmNo">Cancel</button>
+    <button class="btn btn--fill" type="button" id="confirmYes">Yes, place order</button>
+  </div>`;
+document.body.appendChild(confirmDlg);
+confirmDlg.addEventListener('keydown', (e) => e.stopPropagation());   // Esc closes only the popup, not the cart drawer too
+confirmDlg.addEventListener('click', (e) => { if (e.target === confirmDlg) confirmDlg.close(); });   // click outside = cancel
+$('confirmNo').onclick = () => confirmDlg.close();
+$('confirmYes').onclick = () => { confirmDlg.close(); submitOrder(); };
+
+/* Click "Place order": check the fields, then ask for confirmation */
 $('cartBody')?.addEventListener('click', (e) => {
   if (!e.target.closest('#placeOrder')) return;
   const keys = Object.keys(cart);
@@ -212,6 +230,16 @@ $('cartBody')?.addEventListener('click', (e) => {
   const delivery = checkout.mode === 'Delivery', digits = checkout.phone.replace(/\D/g, '');
   if (delivery && checkout.address.length < 8) { $('coMsg').textContent = 'Please enter your full delivery address.'; return $('coAddr').focus(); }
   if (delivery && digits.length < 7) { $('coMsg').textContent = 'Please enter a mobile number so the rider can reach you.'; return $('coPhone').focus(); }
+  const count = keys.reduce((n, k) => n + cart[k].qty, 0);
+  $('confirmSum').textContent = `${count} item${count > 1 ? 's' : ''} · ${peso(subtotal() - discountOf())} · ${checkout.mode}`;
+  confirmDlg.showModal();
+});
+
+/* Runs only after the customer taps "Yes, place order" (your original code, unchanged) */
+function submitOrder() {
+  const keys = Object.keys(cart);
+  if (!keys.length) return;
+  const delivery = checkout.mode === 'Delivery';
   const s = getSession();
   let orders = [];
   try { orders = JSON.parse(localStorage.getItem('cc-orders') || '[]'); } catch (x) { orders = []; }
@@ -231,7 +259,7 @@ $('cartBody')?.addEventListener('click', (e) => {
   $('cartBody').innerHTML = delivery
     ? `<p>Order placed! We'll deliver to ${escH(checkout.address)}. Pay on delivery. Salamat!</p>`
     : '<p>Order placed! Pay when you pick up. Salamat!</p>';
-});
+}
 
 /* ---------- Menu changes made in the admin panel (adminOrders.html) ----------------
    cc-menu       = { "hot-coffee:0:Medium": { price, out } }   new price / sold out
@@ -580,4 +608,3 @@ function initAccountPage() {
   render();
 }
 if ($('signin-form')) initAccountPage();
-

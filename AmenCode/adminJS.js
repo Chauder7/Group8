@@ -280,8 +280,15 @@
       const k = i.dataset.price, out = outs.find((c) => c.dataset.out === k).checked, price = Math.round(+i.value);
       if (out || (price > 0 && price !== +i.dataset.base)) next[k] = { price: price > 0 ? price : +i.dataset.base, out };
     });
-    write(K.menu, next); $('menuMsg').textContent = 'Saved. The menu page now uses these.';
+    if (!write(K.menu, next)) { $('menuMsg').textContent = 'Could not save in this browser.'; return; }
+    $('menuMsg').textContent = 'Saved. The menu page now uses these.';
+    const btn = $('saveMenu');
+    btn.textContent = 'Saved ✓';
+    btn.classList.remove('is-zoom'); void btn.offsetWidth;   // lets the zoom replay if clicked again
+    btn.classList.add('is-zoom');
+    setTimeout(() => location.reload(), 500);                // refresh after the zoom finishes
   }
+  
   function removeItem(id) {
     if (!guard('menu')) return;
     const st = read(K.items, {}), added = st.added || [], it = added.find((i) => i.id === id);

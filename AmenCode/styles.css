@@ -1615,8 +1615,19 @@ img {
   flex-wrap: wrap;
   gap: 16px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between;   /* ibinalik mula sa flex-end */
   margin-bottom: 32px;
+}
+
+.adm .btn.is-on,
+.adm__tabs .btn.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.header .adm__tabs .btn {
+  padding: 8px 18px;
 }
 
 .adm__tabs {
@@ -2025,4 +2036,59 @@ img {
 .cart__comsg {
   min-height: 16px;
   color: var(--accent);
+}
+
+/* Place order confirmation popup */
+.confirm {
+  border: 1.693px solid var(--ink);
+  border-radius: 24px;
+  background: var(--bg);
+  color: var(--ink);
+  padding: 32px;
+  width: calc(100% - 32px);
+  max-width: 420px;
+}
+
+.confirm::backdrop {
+  background: rgba(20, 18, 16, 0.55);
+}
+
+.confirm h3 {
+  margin: 0 0 12px;
+}
+
+.confirm__sum {
+  margin: 0 0 24px;
+  font: 400 13px/20px var(--mono);
+}
+
+.confirm__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* "Save menu changes" zoom */
+@keyframes saveZoom {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.btn.is-zoom {
+  animation: saveZoom 0.45s ease;
+  pointer-events: none;   /* blocks double-clicks while it reloads */
+}
+
+.header .adm__tabs {
+  gap: 32px;
+  align-items: center;
+}
+
+.header button.nav__link {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: inherit;
 }

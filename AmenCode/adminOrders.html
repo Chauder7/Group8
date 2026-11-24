@@ -22,23 +22,21 @@
                 <span class="logo__text"><span class="logo__name">Café Centígrado</span><span
                         class="logo__sub">Admin</span></span>
             </a>
-            <nav class="nav" aria-label="Primary"><a class="nav__link" href="../AmenCode/index.html">← Back to site</a>
-            </nav>
+<nav class="nav" aria-label="Primary">
+    <div class="adm__tabs" id="tabs" role="group" aria-label="Admin sections">
+    <a class="nav__link" href="../AmenCode/adminAccounts.html">Accounts</a>
+    <a class="nav__link" href="../AmenCode/adminMenu.html">Menu</a>
+    <a class="nav__link is-active" href="../AmenCode/adminOrders.html" aria-current="page">Order queue</a>
+</div>
+<button class="btn btn--line" type="button" id="logout">Log out</button>
+<span id="who" hidden></span>
+
         </div>
     </header>
 
     <main id="top">
         <!-- ORDER QUEUE PAGE. admin.js sends you to adminLogin.html if you are not signed in. -->
         <section class="container adm" id="dash" hidden aria-label="Admin panel">
-            <div class="adm__bar">
-                <nav class="adm__tabs" id="tabs" aria-label="Admin sections">
-                    <a class="btn btn--line" href="../AmenCode/adminAccounts.html">Accounts</a>
-                    <a class="btn btn--line" href="../AmenCode/adminMenu.html">Menu</a>
-                    <a class="btn btn--line is-on" href="../AmenCode/adminOrders.html" aria-current="page">Order
-                        queue</a>
-                </nav>
-                <div><span class="mono-sm" id="who"></span> <button class="btn btn--line" type="button" id="logout">Log
-                        out</button></div>
             </div>
             <div class="adm__stats" id="stats"></div>
             <div class="adm__sub" id="subtabs" role="group" aria-label="Section" hidden></div>
