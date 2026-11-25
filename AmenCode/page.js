@@ -42,10 +42,6 @@ const discountOf = () => {
   return Math.min(sub, p.type === 'percent' ? Math.round(sub * p.value / 100) : +p.value);
 };
 
-/* Pickup or delivery details (remembered so a returning customer does not retype them) */
-const checkout = Object.assign({ mode: 'Pickup', phone: '', address: '' }, readJ('cc-checkout', {}));
-const saveCheckout = () => { try { localStorage.setItem('cc-checkout', JSON.stringify(checkout)); } catch (e) { } };
-
 function cartLine(k) {
   const l = cart[k], adds = addonsOf(l);
   let extra = '';
@@ -73,13 +69,6 @@ function renderCart() {
     ? keys.map(cartLine).join('') +
     `<div class="cart__promo" style="display:flex;gap:8px;padding:16px 0 4px"><input id="promoIn" type="text" placeholder="Promo code" aria-label="Promo code" value="${escH(promoCode)}" style="flex:1;min-width:0;min-height:40px;padding:0 10px;border:1.693px solid var(--ink);background:var(--bg);font:400 13px var(--mono);text-transform:uppercase"><button class="btn" id="promoBtn" type="button">Apply</button></div>` +
     `<p class="mono-sm" role="status" style="padding-bottom:12px">${discountOf() ? escH(promoCode) + ' applied: −' + peso(discountOf()) : escH(promoMsg)}</p>` +
-    `<div class="cart__co"><p class="mono-sm">How do you want it?</p>
-        <div class="cart__mode" role="radiogroup" aria-label="Pickup or delivery">
-          <label><input type="radio" name="coMode" value="Pickup"${checkout.mode === 'Pickup' ? ' checked' : ''}> Pickup</label>
-          <label><input type="radio" name="coMode" value="Delivery"${checkout.mode === 'Delivery' ? ' checked' : ''}> Delivery</label></div>
-        <input id="coPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Mobile number" aria-label="Mobile number" value="${escH(checkout.phone)}">
-        <input id="coAddr" type="text" autocomplete="street-address" placeholder="Delivery address (street, barangay, city)" aria-label="Delivery address" value="${escH(checkout.address)}"${checkout.mode === 'Delivery' ? '' : ' hidden'}>
-        <p class="mono-sm cart__comsg" id="coMsg" role="status"></p></div>` +
     '<button class="btn" id="placeOrder" type="button">Place order</button>'
     : '<p>Nothing here yet — add something from the menu.</p><a class="btn" href="menu.html">Browse the menu</a>';
   syncAddonPage();
@@ -190,20 +179,6 @@ document.addEventListener('click', (e) => {
   else addToCart(b.dataset.key, b.dataset.name, b.dataset.price, b);
 });
 
-/* Pickup / delivery fields in the cart */
-$('cartBody')?.addEventListener('input', (e) => {
-  if (e.target.id === 'coPhone') checkout.phone = e.target.value.trim();
-  else if (e.target.id === 'coAddr') checkout.address = e.target.value.trim();
-  else return;
-  saveCheckout();
-});
-$('cartBody')?.addEventListener('change', (e) => {
-  if (e.target.name !== 'coMode') return;
-  checkout.mode = e.target.value; saveCheckout();
-  $('coAddr').hidden = checkout.mode !== 'Delivery';
-  $('coMsg').textContent = '';
-});
-
 /* ---------- Place order: saved for the admin panel (adminOrders.html) ---------- */
 
 /* Confirmation popup (built here, so no page needs extra HTML) */
@@ -227,11 +202,8 @@ $('cartBody')?.addEventListener('click', (e) => {
   if (!e.target.closest('#placeOrder')) return;
   const keys = Object.keys(cart);
   if (!keys.length) return;
-  const delivery = checkout.mode === 'Delivery', digits = checkout.phone.replace(/\D/g, '');
-  if (delivery && checkout.address.length < 8) { $('coMsg').textContent = 'Please enter your full delivery address.'; return $('coAddr').focus(); }
-  if (delivery && digits.length < 7) { $('coMsg').textContent = 'Please enter a mobile number so the rider can reach you.'; return $('coPhone').focus(); }
   const count = keys.reduce((n, k) => n + cart[k].qty, 0);
-  $('confirmSum').textContent = `${count} item${count > 1 ? 's' : ''} · ${peso(subtotal() - discountOf())} · ${checkout.mode}`;
+  $('confirmSum').textContent = `${count} item${count > 1 ? 's' : ''} · ${peso(subtotal() - discountOf())} · Pickup`;
   confirmDlg.showModal();
 });
 
@@ -239,7 +211,6 @@ $('cartBody')?.addEventListener('click', (e) => {
 function submitOrder() {
   const keys = Object.keys(cart);
   if (!keys.length) return;
-  const delivery = checkout.mode === 'Delivery';
   const s = getSession();
   let orders = [];
   try { orders = JSON.parse(localStorage.getItem('cc-orders') || '[]'); } catch (x) { orders = []; }
@@ -247,7 +218,7 @@ function submitOrder() {
   orders.push({
     id: Date.now(), at: new Date().toISOString(), status: 'New',
     customer: s ? (s.name || s.email) : 'Guest', email: s ? s.email : '',
-    mode: checkout.mode, phone: checkout.phone, address: delivery ? checkout.address : '',
+    mode: 'Pickup', phone: '', address: '',
     items: keys.map((k) => ({ name: cart[k].name, qty: cart[k].qty, addons: addonsOf(cart[k]) })),
     total: sub - disc, subtotal: sub, discount: disc, promo: used
   });
@@ -256,9 +227,7 @@ function submitOrder() {
   if (used) { const ps = readJ('cc-promos', []); ps.forEach((p) => { if (p.code === used) p.used = (p.used || 0) + 1; }); try { localStorage.setItem('cc-promos', JSON.stringify(ps)); } catch (x) { } }
   promoCode = ''; promoMsg = ''; try { localStorage.removeItem('cc-promo'); } catch (x) { }
   cart = {}; save(); renderCart();
-  $('cartBody').innerHTML = delivery
-    ? `<p>Order placed! We'll deliver to ${escH(checkout.address)}. Pay on delivery. Salamat!</p>`
-    : '<p>Order placed! Pay when you pick up. Salamat!</p>';
+  $('cartBody').innerHTML = '<p>Order placed! Pay when you pick up. Salamat!</p>';
 }
 
 /* ---------- Menu changes made in the admin panel (adminOrders.html) ----------------

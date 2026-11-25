@@ -6,7 +6,7 @@
   const $ = (id) => document.getElementById(id);
   const peso = (n) => '₱' + Number(n).toLocaleString('en-PH');
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const K = { admins: 'cc-admins', session: 'cc-admin', lock: 'cc-admin-lock', users: 'cc-users', orders: 'cc-orders', menu: 'cc-menu', items: 'cc-menu-items', specials: 'cc-specials', promos: 'cc-promos' };
+  const K = { admins: 'cc-admins', session: 'cc-admin', lock: 'cc-admin-lock', users: 'cc-users', orders: 'cc-orders', menu: 'cc-menu', items: 'cc-menu-items', specials: 'cc-specials', promos: 'cc-promos', demo: 'cc-demo-seeded' };
   const SESSION_MS = 8 * 60 * 60 * 1000, MAX_TRIES = 5, LOCK_MS = 60 * 1000;
   const LOGIN_URL = 'adminLogin.html', PANEL_URL = 'adminOrders.html', MENU_URL = 'menu.html';
   const DEFAULT_EMAIL = 'admin@cafecentigrado.ph';                       // old demo account, removed automatically
@@ -51,7 +51,63 @@
     if (a[DEFAULT_EMAIL] && a[DEFAULT_EMAIL].mustChange) delete a[DEFAULT_EMAIL];
     OLD_OWNERS.forEach((e) => { delete a[e]; });
     write(K.admins, a);
+    seedDemo();
   }
+
+  /* ---------- Demo data: fake customers and orders so the panel is not empty on the first visit ----------
+     Added once per browser (flag cc-demo-seeded), so anything you delete stays deleted.
+     Every fake customer signs in with the password  Customer123  (on SignUp.html).
+     To get the demo data back: remove the cc-demo-seeded key in DevTools > Application > Local Storage, then reload. */
+  const DEMO_USERS = [   // [email, name, joined (days ago), salt, hash, suspended?]
+    ['ana.reyes@example.com', 'Ana Reyes', 60, '11d0a0c2985f39dd7b8565c7fc14e531', '406bc41dad88441775caa17244775fe5a5964a06672b66c756c262a57c4e4bc0'],
+    ['miguel.santos@example.com', 'Miguel Santos', 48, '89d39242b0b360beaecd8f298f64656c', '62f744d2db3f1712ceba519ef078b5eddb1c26f17ad2327ae7d9f3e03c55395a'],
+    ['bea.villanueva@example.com', 'Bea Villanueva', 41, 'a853fd1cf56042fc1a09de6862bc9cb8', 'a6e86d872442dee18b6ad3c3ed24fd3e56b2e0b0d919d560812b26aba3be69c5'],
+    ['carlo.mendoza@example.com', 'Carlo Mendoza', 33, 'a720dde8d585f3faa0c14e8a41470d08', 'fa77b473266dce8eabab15b00afff3cab6c821d4cb39e84a3b5ee05da200075f'],
+    ['dana.cruz@example.com', 'Dana Cruz', 27, '310df86e4e87ea7a8c5bf331256c434e', '4444ef6ea8dc30177e62e34fe3aae7ce1cec5241e464c90c0951252ccb9f255c'],
+    ['elena.garcia@example.com', 'Elena Garcia', 19, '25ba7e6bb72f960647fa38297e9f5350', '0a3c56f4632c90e67c7accea97b97011636bf4a5a9dab62eb669220d56d1cd4f'],
+    ['paolo.ramos@example.com', 'Paolo Ramos', 12, '995a8e8c3657b05633cf3b79baf2b234', 'c05751121e8dc80b30496c450f96cbcc8003640700e52ce954f714dca3a7713c', true],
+    ['trisha.lim@example.com', 'Trisha Lim', 5, 'fb6a365d1ca856e34ad2bd9a6d45fb9f', 'be11236f2fc12dc4de6c33e00dd6d004adbb0aa1e275d04af47517e5db91082f']
+  ];
+  const DEMO_ORDERS = [  // [minutes ago, customer email ('' = guest), mode, address, items [name, qty, unit price, add-ons], status, promo]
+    [4, 'ana.reyes@example.com', 'Pickup', '', [['Caramel Macchiato (M)', 2, 130, []], ['Biscoff Cheesecake', 1, 130, []]], 'New'],
+    [9, '', 'Pickup', '', [['Americano (L)', 1, 110, []]], 'New'],
+    [14, 'miguel.santos@example.com', 'Pickup', '', [['Choco Chip Cream (L)', 1, 220, ['Whipped Cream']], ['Cheesy Meat Fries', 1, 195, []]], 'New'],
+    [22, 'bea.villanueva@example.com', 'Pickup', '', [['Lemon Yakult (L)', 2, 140, []], ['Nachos', 1, 195, []]], 'Preparing'],
+    [31, 'carlo.mendoza@example.com', 'Pickup', '', [['Carbonara', 1, 180, []], ['Kiwi Tea (L)', 1, 145, []]], 'On hold'],
+    [38, 'trisha.lim@example.com', 'Pickup', '', [['Matcha Latte (M)', 1, 165, []], ['Cookies', 2, 65, []]], 'Ready'],
+    [95, 'dana.cruz@example.com', 'Pickup', '', [['Mocha (L)', 2, 140, []]], 'Done'],
+    [150, 'elena.garcia@example.com', 'Pickup', '', [['Pork Tonkatsu', 1, 180, []], ['Strawberry Matcha (L)', 1, 230, ['Popping Boba', 'Oat Milk']]], 'Done', 'WELCOME10'],
+    [210, 'miguel.santos@example.com', 'Pickup', '', [['Oreo Cream (M)', 1, 175, []]], 'Cancelled'],
+    [1440 + 200, 'ana.reyes@example.com', 'Pickup', '', [['Vanilla Latte (L)', 1, 130, []], ['Blueberry Cheesecake', 1, 120, []]], 'Done'],
+    [1440 + 340, 'dana.cruz@example.com', 'Pickup', '', [['Truffle Pasta', 1, 195, []], ['Green Apple Yakult (L)', 1, 140, []]], 'Done'],
+    [2880 + 120, 'bea.villanueva@example.com', 'Pickup', '', [['Sea Salt Caramel (M)', 2, 130, []], ['Mozzarella Sticks', 1, 170, []]], 'Done'],
+    [2880 + 400, '', 'Pickup', '', [['Hungarian Sandwich', 1, 125, []], ['Lemon Tea (M)', 1, 130, []]], 'Done'],
+    [4320 + 90, 'carlo.mendoza@example.com', 'Pickup', '', [['Chicken Poppers', 2, 175, []], ['Passionfruit Tea (L)', 2, 145, []]], 'Done'],
+    [5760 + 60, 'elena.garcia@example.com', 'Pickup', '', [['Cafe Latte (M)', 1, 150, ['Extra Shot', 'Vanilla Syrup']]], 'Done'],
+    [7200 + 300, 'paolo.ramos@example.com', 'Pickup', '', [['Matcha Cream (L)', 1, 200, []], ['Cookies', 1, 65, []]], 'Cancelled']
+  ];
+  function seedDemo() {
+    const now = Date.now(), DAY = 86400000, u = read(K.users, {}), orders = read(K.orders, []);
+    try { if (localStorage.getItem(K.demo) && (Object.keys(u).length || orders.length)) return; } catch (e) { return; }   // already added (or the panel is empty, so add it again)
+    const sinceMidnight = Math.max(2, (now - new Date().setHours(0, 0, 0, 0)) / 60000);
+    DEMO_USERS.forEach(([email, name, days, salt, hash, off]) => {
+      if (!u[email]) u[email] = { name, salt, hash, created: new Date(now - days * DAY).toISOString(), ...(off ? { disabled: true } : {}) };
+    });
+    DEMO_ORDERS.forEach(([mins, email, mode, address, items, status, promo], i) => {
+      if (mins < 1440) mins = Math.min(mins, sinceMidnight - 1);                    // today's orders stay on today's date
+      const t = now - mins * 60000, sub = items.reduce((s, x) => s + x[1] * x[2], 0), disc = promo ? Math.round(sub * 0.1) : 0;
+      const idx = Object.keys(u).indexOf(email);
+      orders.push({
+        id: Math.round(t) + i, at: new Date(t).toISOString(), status, customer: email ? u[email].name : 'Guest', email,
+        mode: 'Pickup', phone: '0917' + String(5550100 + (idx < 0 ? 99 : idx)),
+        items: items.map(([name, qty, , addons]) => ({ name, qty, addons })),
+        total: sub - disc, subtotal: sub, discount: disc, promo: promo || ''
+      });
+    });
+    orders.sort((a, b) => a.id - b.id);
+    if (write(K.users, u) && write(K.orders, orders)) { try { localStorage.setItem(K.demo, '1'); } catch (e) { } }
+  }
+
 
   /* ---------- who is signed in ----------
      The session only stores the email + expiry. The role is ALWAYS looked up from the admin record,
@@ -181,7 +237,7 @@
   const msg = (t) => { const el = $('formMsg'); if (el) el.textContent = t; };
 
   /* =====================================================================
-     ORDER QUEUE: queue, today, all orders. Each order shows its pickup details.
+     ORDER QUEUE: queue, today, all orders. Every order is pickup at the counter.
      ===================================================================== */
   const itemsText = (o) => o.items.map((i) => `${i.qty}× ${i.name}${i.addons && i.addons.length ? ' (+ ' + i.addons.join(', ') + ')' : ''}`);
   const where = (o) => `<b>Pickup</b> at the counter${o.phone ? ` · ☎ ${esc(o.phone)}` : ''}`;
@@ -304,15 +360,8 @@
       const k = i.dataset.price, out = outs.find((c) => c.dataset.out === k).checked, price = Math.round(+i.value);
       if (out || (price > 0 && price !== +i.dataset.base)) next[k] = { price: price > 0 ? price : +i.dataset.base, out };
     });
-    if (!write(K.menu, next)) { $('menuMsg').textContent = 'Could not save in this browser.'; return; }
-    $('menuMsg').textContent = 'Saved. The menu page now uses these.';
-    const btn = $('saveMenu');
-    btn.textContent = 'Saved ✓';
-    btn.classList.remove('is-zoom'); void btn.offsetWidth;   // lets the zoom replay if clicked again
-    btn.classList.add('is-zoom');
-    setTimeout(() => location.reload(), 500);                // refresh after the zoom finishes
+    write(K.menu, next); $('menuMsg').textContent = 'Saved. The menu page now uses these.';
   }
-  
   function removeItem(id) {
     if (!guard('menu')) return;
     const st = read(K.items, {}), added = st.added || [], it = added.find((i) => i.id === id);
